@@ -1,17 +1,17 @@
 # coding: utf-8
 lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require 'middleman/iris/version'
+require 'middleman-iris/version'
 
 Gem::Specification.new do |spec|
   spec.name          = "middleman-iris"
   spec.version       = Middleman::Iris::VERSION
-  spec.authors       = ["TODO: Write your name"]
-  spec.email         = ["TODO: Write your email address"]
+  spec.authors       = ["Joshua Welker"]
+  spec.email         = ["welker@ucmo.edu"]
 
-  spec.summary       = %q{TODO: Write a short summary, because Rubygems requires one.}
-  spec.description   = %q{TODO: Write a longer description or delete this line.}
-  spec.homepage      = "TODO: Put your gem's website or public repo URL here."
+  spec.summary       = %q{This is a short description.}
+  spec.description   = %q{This is a longer description.}
+  spec.homepage      = "http://my.url"
   spec.license       = "MIT"
 
   # Prevent pushing this gem to RubyGems.org. To allow pushes either set the 'allowed_push_host'

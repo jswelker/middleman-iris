@@ -1,5 +1,5 @@
-require "middleman-iris/version"
 require "middleman-core"
+require "middleman-iris/version"
 
 ::Middleman::Extensions.register( :iris ) do
    require 'middleman-iris/extension'

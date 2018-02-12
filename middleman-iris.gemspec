@@ -30,7 +30,22 @@ Gem::Specification.new do |spec|
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
   spec.require_paths = ["lib"]
 
+  spec.add_runtime_dependency("middleman-core", "~> 4.2")
+  spec.add_runtime_dependency("middleman-vcs-time", "~> 0.0")
+  spec.add_runtime_dependency("rdf", "~> 3.0")
+  spec.add_runtime_dependency("rdf-rdfxml", "~> 2.2")
+  spec.add_runtime_dependency("rdf-turtle", "~> 3.0")
+  spec.add_runtime_dependency("json-ld", "~> 2.2")
+  spec.add_runtime_dependency("mime-types", "~> 3.1")
+  spec.add_runtime_dependency("rmagick", "~> 2.16")
+  spec.add_runtime_dependency("pdf-reader", "~> 2.0")
+  spec.add_runtime_dependency("roo", "~> 2.7")
+  spec.add_runtime_dependency("nokogiri", "~> 1.8")
+  spec.add_runtime_dependency("object_flatten", "~> 0.1")
+  spec.add_runtime_dependency("httparty", "~> 0.15")
+
   spec.add_development_dependency "bundler", "~> 1.14"
   spec.add_development_dependency "rake", "~> 10.0"
   spec.add_development_dependency "minitest", "~> 5.0"
+  spec.add_development_dependency "pry", "~> 0.10"
 end

@@ -9,7 +9,7 @@ module Middleman
 
 
       def metadata_directory_path
-        "#{self.dirname}/_metadata"
+        "#{self.dirname}/.metadata"
       end
 
 
@@ -54,18 +54,18 @@ module Middleman
 
       def text
         if File.exist?(text_file_path)
-          File.read(text_file_path).squeeze
+          File.read(text_file_path).gsub(/\s/, ' ').squeeze("\r\n ")
         end
       end
 
 
       def index_text
-        index_text = self.text
         text_length = self.best_index_rules[:file_text]
-        if text_length.include?('%')
-          return self.text[0..(chars.length - 1)]
+        if text_length.to_s.include?('%')
+          chars = (self.text&.length || 0 ) * (text_length.to_f / 100)
+          return (self.text || "")[0..(chars.to_i)].strip
         else
-          return self.text[0..(text_length.to_f - 1)]
+          return (self.text || "")[0..(text_length.to_f)].strip
         end
       end
 
@@ -85,7 +85,7 @@ module Middleman
           if page?
             # Rip rendered HTML page content using Nokogiri
             doc = Nokogiri::HTML(self.render)
-            text = doc.css(@app.config[:iris][:html_text_indexing_selector]).text
+            text = doc.css(iris_option(:html_text_indexing_selector)).text
             File.open(text_file_path, 'w'){|f| f.write text}
           elsif pdf?
             # Rip PDF text using pdf-reader library
@@ -96,11 +96,11 @@ module Middleman
             end
             text = page_text.join("\n")
             File.open(text_file_path, 'w'){|f| f.write text}
-          elsif word_doc?
+          elsif word_doc? && Dir.exists?(iris_option(:libreoffice_dir))
             # Rip Office documents using LibreOffice CLI convert tool
-            system("\"#{@app.config[:iris][:libreoffice_dir]}/soffice.exe\" --headless --convert-to txt \"#{self.source_file}\" --outdir \"#{metadata_directory_path}\"")
+            system("\"#{iris_option(:libreoffice_dir)}/soffice.exe\" --headless --convert-to txt \"#{self.source_file}\" --outdir \"#{metadata_directory_path}\"")
             system("mv \"#{text_file_path.gsub(self.ext, '')}\" \"#{text_file_path}\"")
-          elsif spreadsheet?
+          elsif spreadsheet? && Dir.exists?(iris_option(:libreoffice_dir))
             # Rip spreadsheets using the Roo library
             workbook = Roo::Spreadsheet.open(self.source_file)
             text = ''
@@ -108,9 +108,9 @@ module Middleman
               text += workbook.sheet(sheet_name).to_csv
             end
             File.open(text_file_path, 'w'){|f| f.write text}
-          elsif powerpoint?
+          elsif powerpoint? && Dir.exists?(iris_option(:libreoffice_dir))
             # Rip Powerpoint files to PDF using LibreOffice CLI and then from PDF to txt using pdf-reader library
-            system("\"#{@app.config[:iris][:libreoffice_dir]}/soffice.exe\" --headless --convert-to pdf \"#{self.source_file}\" --outdir \"#{metadata_directory_path}\"")
+            system("\"#{iris_option(:libreoffice_dir)}/soffice.exe\" --headless --convert-to pdf \"#{self.source_file}\" --outdir \"#{metadata_directory_path}\"")
             pdf_path = text_file_path.gsub(self.ext+'.txt', '.pdf')
             reader = PDF::Reader.new(pdf_path)
             page_text = []
@@ -145,7 +145,7 @@ module Middleman
         if @app.server?
         "http://localhost:#{@app.config.port}#{@app.sitemap.resources.select{|r| r.source_file == self.thumbnail_path}.first&.url}"
         else
-          self.data.dig('iris', 'permalink') || @app.config[:iris][:root_url] + @app.sitemap.resources.select{|r| r.source_file == self.thumbnail_path}.first&.url
+          self.data.dig('iris', 'permalink') || iris_option(:root_url) + @app.sitemap.resources.select{|r| r.source_file == self.thumbnail_path}.first&.url
         end
       end
 
@@ -154,7 +154,7 @@ module Middleman
         return if !self.in_collections_dir? || self.ignored?
         return if self.last_checksum == self.current_checksum && !force_regenerate && self.thumbnail?
 
-        puts "Start #{self.page_id}}"
+        puts "Building thumbnail for #{self.page_id}}..."
         start_time = Time.now
 
         thumbnail = nil
@@ -173,7 +173,7 @@ module Middleman
         end
 
         if self.powerpoint? || self.word_doc? || self.spreadsheet?
-          system("\"#{@app.config[:iris][:libreoffice_dir]}/soffice.exe\" --convert-to pdf --outdir \"#{self.dirname}\" \"#{self.source_file}\"")
+          system("\"#{iris_option(:libreoffice_dir)}/soffice.exe\" --convert-to pdf --outdir \"#{self.dirname}\" \"#{self.source_file}\"")
           sleep(1)
           pdf_file = self.source_file.gsub(self.ext, '') + '.pdf'
           pdf = Magick::ImageList.new(pdf_file)
@@ -203,40 +203,64 @@ module Middleman
 
         config = @app.config.to_h
         # App default
-        rules[:properties] = config.dig(:iris, :index, :default_properties) || rules[:properties]
-        rules[:file_text] = config.dig(:iris, :index, :default_file_text) || rules[:file_text]
+        rules[:properties] = iris_option(:index_default_properties) || rules[:properties]
+        rules[:file_text] = iris_option(:index_default_file_text) || rules[:file_text]
 
-        # Ext default
-        rules[:properties] = config.dig(:iris, :index, :for_ext_like)&.select{|r| self.ext.match(r[:regex])}&.first&.dig(:properties) || rules[:properties]
-        rules[:file_text] = config.dig(:iris, :index, :for_ext_like)&.select{|r| self.ext.match(r[:regex])}&.first&.dig(:file_text) || rules[:file_text]
-
-        # Dir default
-        rules[:properties] = config.dig(:iris, :index, :for_ext_like)&.select{|r| self.id.match(r[:regex])}&.last&.dig(:properties) || rules[:properties]
-        rules[:file_text] = config.dig(:iris, :index, :for_ext_like)&.select{|r| self.id.match(r[:regex])}&.last&.dig(:file_text) || rules[:file_text]
+        # File regex default
+        rules[:properties] = iris_option(:index_for_files_like)&.select{|r| self.page_id.match(r[:regex])}&.last&.dig(:properties) || rules[:properties]
+        rules[:file_text] = iris_option(:index_for_files_like)&.select{|r| self.page_id.match(r[:regex])}&.last&.dig(:file_text) || rules[:file_text]
 
         # Doc-specific
-        rules[:properties] = self.iris_value(:index)&.dig(:properties) || rules[:properties]
-        rules[:file_text] = self.iris_value(:index)&.dig(:file_text) || rules[:file_text]
+        rules[:properties] = self.iris_value(:indexing)&.dig(:properties) || rules[:properties]
+        rules[:file_text] = self.iris_value(:indexing)&.dig(:file_text) || rules[:file_text]
 
         return rules
       end
 
 
+      def indexes
+        index_hash = {}
+        collections = @app.sitemap.resources.select{|r| r.site_root? || (r.collection? && self.descendant_of?(r)) }
+        collections.each do |c|
+          index_name = c.best_title
+          index_name = @app.config[:site_name] if @app.config[:site_name].present? && c.site_root?
+          index_hash[index_name] = c.permalink + '.metadata/index.json'
+        end
+        return index_hash
+      end
+
+
       module SingletonMethods
 
-        def build_index
-          #TODO: build index for each collection and for site root
-          index = []
-          app.sitemap.resources.each do |r|
-            next unless r.in_collections_dir?
-            doc = r.rdf_properties
-            doc.merge!({
-              id: r.uri,
-              url: r.permalink,
-              text: r.index_text
-            })
-            index << doc
+        def build_indexes(app)
+          indexes = []
+          collections = []
+          collections += app.sitemap.resources.select{|r| r.site_root?}
+          collections += app.sitemap.resources.select{|r| r.collection?}
+          collections.uniq!
+          collections.each do |c|
+            puts "Indexing collection #{c.dirname}"
+            start_time = Time.now
+            index = []
+            resources = app.sitemap.resources.select{|r| !r.ignored? && r.in_collections_dir? && !r.in_metadata_dir?}
+            if !c.site_root?
+              resources = resources.select{|r| r.descendant_of?(c)}
+            end
+            resources.each do |r|
+              doc = r.rdf_properties.select{|k, v| r.best_index_rules[:properties].include?(k)}
+              doc.merge!({
+                id: r.uri,
+                text: r.index_text
+              })
+              doc.delete_if{|k,v| v.blank?}
+              index << doc
+            end
+            c.create_metadata_directory
+            File.open("#{c.metadata_directory_path}/index.json", 'w'){|f| f.write(index.to_json)}
+            puts "Finished in #{Time.now - start_time}"
+            indexes << index
           end
+          return indexes
         end
 
 

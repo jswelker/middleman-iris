@@ -17,8 +17,18 @@ module Middleman
         end
 
 
+        def iris_option(option)
+          return @app.extensions[:iris].options[option]
+        end
+
+
+        def site_root?
+          return self.path.start_with?('index.') && self.dirname.match(/\/#{@app.config[:source]}$/)
+        end
+
+
         def in_collections_dir?
-          self.source_file.start_with?( "#{@app.root}/#{@app.config[:source]}/#{@app.config[:iris][:collections_dir] || 'collections'}" )
+          self.source_file.start_with?( "#{@app.root}/#{@app.config[:source]}/#{iris_option(:collections_dir)}" )
         end
 
 
@@ -46,6 +56,24 @@ module Middleman
             end
             match
           end
+        end
+
+
+        def descendant_of?(potential_parent_resource)
+          current_resource = self
+          is_descendant = current_resource.parent&.page_id == potential_parent_resource.page_id
+          has_parent = current_resource.parent.present?
+          while has_parent && !is_descendant
+            current_resource = current_resource.parent
+            is_descendant = true if current_resource.parent&.page_id == potential_parent_resource.page_id
+            has_parent = current_resource.parent.present?
+          end
+          return is_descendant
+        end
+
+
+        def in_metadata_dir?
+          return !!self.dirname.match(/\.metadata/)
         end
 
 
@@ -105,23 +133,23 @@ module Middleman
 
 
         def best_title
-          if self.item? || self.collection?
-            return self.data.dig('iris', 'schema_properties', 'name') || self.data.title || self.dirname_last
+          if self.item? || self.collection? || self.site_root?
+            return self.rdf_properties['schema:name'] || self.data.title || self.dirname_last
           elsif self.page?
-            return self.data.dig('iris', 'schema_properties', 'name') || self.data.title || self.parent.data.dig('iris', 'files', self.filename, 'schema_properties', 'name') || self.filename
+            return self.rdf_properties['schema:name'] || self.data.title || self.parent&.data&.dig('iris', 'files', self.filename, 'rdf_properties', 'schema:name') || self.filename
           else
-            return self.parent.data.dig('iris', 'files', self.filename, 'schema_properties', 'name') || self.filename
+            return self.parent&.data&.dig('iris', 'children', self.filename, 'rdf_properties', 'schema:name') || self.filename
           end
         end
 
 
         def best_description
           if self.directory_index?
-            return self.data.dig('iris', 'schema_properties', 'description') || self.data.dig('iris', 'description') || nil
+            return self.rdf_properties['schema:description'] || self.data.dig('iris', 'description') || nil
           elsif self.page?
-            return self.data.dig('iris', 'schema_properties', 'description') || self.data.dig('iris', 'description') || self.parent.data.dig('iris', 'files', self.filename, 'schema_properties', 'description') || nil
+            return self.rdf_properties['schema:description'] || self.data.dig('iris', 'description') || self.parent&.data&.dig('iris', 'files', self.filename, 'rdf_properties', 'schema:description') || nil
           else
-            return self.parent.data.dig('iris', 'files', self.filename, 'schema_properties', 'description') || nil
+            return self.parent&.data&.dig('iris', 'children', self.filename, 'rdf_properties', 'schema:description') || nil
           end
         end
 
@@ -207,16 +235,16 @@ module Middleman
           if @app.server?
           "http://localhost:#{@app.config.port}#{self.url}"
           else
-            self.data.dig('iris', 'permalink') || @app.config[:iris][:root_url] + self.url
+            self.data.dig('iris', 'permalink') || iris_option(:root_url) + self.url
           end
         end
 
 
         def uri
-          if self.item? || self.collection?
+          if self.item? || self.collection? || self.site_root?
             return self.permalink
           else
-            return self.parent.permalink + '#' + self.uri_slug
+            return (self.parent&.permalink || '').gsub(/\/$/,'') + '#' + self.uri_slug
           end
         end
 
@@ -280,10 +308,10 @@ module Middleman
         end
 
 
-        def specific_resources(paths = [])
+        def specific_resources(app, paths = [])
           collections = []
           paths.each do |p|
-            collection = sitemap.resources.select{|r| r.path == p}.first
+            collection = app.sitemap.resources.select{|r| r.path == p}.first
             collections << collection if collection.present?
           end
           return collections

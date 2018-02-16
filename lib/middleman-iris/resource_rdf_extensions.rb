@@ -124,9 +124,9 @@ module Middleman
           'schema:identifier' => self.uri,
           'schema:dateModified' => self.last_timestamp,
           'schema:datePublished' => self.first_timestamp,
-          'schema:provider' => @app.config[:iris][:organization_name],
+          'schema:provider' => iris_option(:organization_name),
           'schema:url' => self.permalink,
-          'schema:inLanguage' => @app.config[:iris][:default_language_code],
+          'schema:inLanguage' => iris_option(:default_language_code),
           'schema:disambiguatingDescription' => "#{self.last_checksum} (SHA256)"
         }
 
@@ -165,7 +165,7 @@ module Middleman
           'bf' => 'http://id.loc.gov/ontologies/bibframe/',
           'bflc' => 'http://id.loc.gov/ontologies/bflc/',
           'foaf' => 'http://xmlns.com/foaf/0.1/',
-          'local' => @app.config.to_h.dig(:iris, :root_url)
+          'local' => iris_option(:root_url)
         }
       end
 
@@ -192,7 +192,7 @@ module Middleman
           '_type' => '@type',
           '_value' => '@value',
           '_label' => 'http://www.w3.org/2000/01/rdf-schema#label',
-          '@vocab' => @app.config.to_h.dig(:iris, :root_url)
+          '@vocab' => iris_option(:root_url)
         }.merge(self.vocabularies)
       end
 

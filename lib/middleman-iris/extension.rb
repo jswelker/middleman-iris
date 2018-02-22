@@ -14,6 +14,10 @@ require 'middleman-iris/resource_helper_extensions'
 require 'middleman-iris/resource_processing_extensions'
 require 'middleman-iris/resource_rdf_extensions'
 require 'middleman-iris/resource_validator_extensions'
+require 'middleman-iris/cli/generate_history'
+require 'middleman-iris/cli/generate_thumbnails'
+require 'middleman-iris/cli/generate_text'
+require 'middleman-iris/cli/generate_index'
 
 module Middleman
   module Iris
@@ -25,18 +29,18 @@ module Middleman
       include Iris::ResourceValidatorExtensions::SingletonMethods
 
       expose_to_template :sort_resources, :collections, :specific_resources, :root_collections, :recently_added, :featured_items,
-      :recursive_unpack_structure_to_rdfa, :build_indexes
+      :recursive_unpack_structure_to_rdfa, :build_index
 
       option :collections_dir, 'collections', 'Name of the root directory where collections live.'
       option :filenames_to_ignore, %w(.keep), 'Names of files to ignore.'
-      option :generate_thumbnails_on_build, true, 'Whether to generate thumbnails on command "middleman build"'
+      option :generate_thumbnails_on_build, false, 'Whether to generate thumbnails on command "middleman build"'
       option :generate_thumbnails_on_serve, false, 'Whether to generate thumbnails on command "middleman serve"'
       option :generate_history_on_build, true, 'Whether to generate file history on command "middleman build"'
       option :generate_history_on_serve, false, 'Whether to generate file history on command "middleman serve"'
-      option :generate_text_on_build, true, 'Whether to generate index text on command "middleman build"'
+      option :generate_text_on_build, false, 'Whether to generate index text on command "middleman build"'
       option :generate_text_on_serve, false, 'Whether to generate index text on command "middleman serve"'
-      option :generate_indexes_on_build, true, 'Whether to generate search indexes on command "middleman build"'
-      option :generate_indexes_on_serve, false, 'Whether to generate search indexes on command "middleman serve"'
+      option :generate_index_on_build, true, 'Whether to generate search index on command "middleman build"'
+      option :generate_index_on_serve, false, 'Whether to generate search index on command "middleman serve"'
       option :root_url, '', 'Root URL to apply to permalinks and URIs'
       option :search_page, 'pages/search', 'ID of search results page'
       option :organization_name, '', 'Name of the organization that owns this website'
@@ -48,8 +52,15 @@ module Middleman
       option :index_default_file_text, '100%', 'Default amount of text indexed for each file. Either a percent of number of total characters'
       option :index_field_weights, {
         default: 10,
-        text: 1,
-        "schema:name" => 20,
+        id: 1,
+        bt: 30,
+        bd: 20,
+        bc: 50,
+        sc: 0.01,
+        co: 0.01,
+        tx: 1,
+        tn: 0.01,
+        i: 0.01
       }, 'Index weights to assign to specific fields to influence search result ranking'
       option :index_for_files_like, [], 'Rules for indexing files whose name/ext/path match a regex.'
       # [{
@@ -77,9 +88,12 @@ module Middleman
 
         app.ready do
           # Generate index
-          if (app.build? && ext.options[:generate_indexes_on_build]) || (app.server? && ext.options[:generate_indexes_on_serve])
-            puts 'Generating search indexes...'
-            ext.build_indexes(app)
+          if (app.build? && ext.options[:generate_index_on_build] && app.config[:iris_cli].blank?) ||
+            (app.server? && ext.options[:generate_index_on_serve]) ||
+            app.config[:iris_cli] == :index
+
+            puts 'Generating search index...'
+            ext.build_index(app)
           end
           # Generate bib metadata formats
 
@@ -105,23 +119,25 @@ module Middleman
           if (options[:filenames_to_ignore] || []).include?(File.basename(r.source_file))
             r.ignore!
           end
-          # Ignore files in _metadata directories
-          if r.dirname_last == '.metadata'
-            r.ignore!
-          end
         end
 
         # Generate file history metadata
-        if (app.build? && options[:generate_history_on_build]) || (app.server? && options[:generate_history_on_serve])
+        if (app.build? && options[:generate_history_on_build] && app.config[:iris_cli].blank?) ||
+          (app.server? && options[:generate_history_on_serve]) ||
+          app.config[:iris_cli] == :history
+
           puts 'Generating file history and checksums...'
           resources.each do |r|
-            next if r.ignored? || !r.in_collections_dir? || r.instance_of?(Middleman::Sitemap::Extensions::RedirectResource)
+            next if r.ignored? || !r.in_collections_dir? || r.instance_of?(Middleman::Sitemap::Extensions::RedirectResource) || r.in_metadata_dir?
             r.add_file_history
           end
         end
 
         # Generate full text for indexing
-        if (app.build? && options[:generate_text_on_build]) || (app.server? && options[:generate_text_on_serve])
+        if (app.build? && options[:generate_text_on_build] && app.config[:iris_cli].blank?) ||
+          (app.server? && options[:generate_text_on_serve]) ||
+          app.config[:iris_cli] == :text
+
           puts 'Generating file text for indexing...'
           resources.each do |r|
             next if r.ignored? || !r.in_collections_dir? || r.instance_of?(Middleman::Sitemap::Extensions::RedirectResource) || r.in_metadata_dir?
@@ -130,7 +146,10 @@ module Middleman
         end
 
         # Generate thumbnails
-        if (app.build? && options[:generate_thumbnails_on_build]) || (app.server? && options[:generate_thumbnails_on_serve])
+        if (app.build? && options[:generate_thumbnails_on_build] && app.config[:iris_cli].blank?) ||
+          (app.server? && options[:generate_thumbnails_on_serve]) ||
+          app.config[:iris_cli] == :thumbnails
+
           puts 'Generating thumbnails...'
           resources.each do |r|
             next if r.ignored? || !r.in_collections_dir? || r.instance_of?(Middleman::Sitemap::Extensions::RedirectResource) || r.in_metadata_dir?
@@ -142,7 +161,7 @@ module Middleman
         if resources.present?
           puts 'Loading metadata from defaults, templates, and parents...'
           resources.each do |r|
-            next if r.ignored? || !r.in_collections_dir? || r.instance_of?(Middleman::Sitemap::Extensions::RedirectResource) || r.in_metadata_dir?
+            next unless r.iris_resource?
             r.load_metadata
           end
         end

@@ -35,7 +35,7 @@ module Middleman
 
 
       def add_file_history
-        if self.last_checksum != self.current_checksum && self.in_collections_dir? && !self.ignored?
+        if self.last_checksum != self.current_checksum && self.in_collections_dir? && !self.ignored? && !self.in_metadata_dir?
           history = self.file_history
           history[Time.now] = {
             'timestamp' => Time.now,
@@ -218,49 +218,97 @@ module Middleman
       end
 
 
-      def indexes
-        index_hash = {}
+      def index_scopes
         collections = @app.sitemap.resources.select{|r| r.site_root? || (r.collection? && self.descendant_of?(r)) }
+        scopes = {}
         collections.each do |c|
           index_name = c.best_title
           index_name = @app.config[:site_name] if @app.config[:site_name].present? && c.site_root?
-          index_hash[index_name] = c.permalink + '.metadata/index.json'
+          scopes[c.page_id] = index_name
         end
-        return index_hash
+        return scopes
       end
 
 
       module SingletonMethods
 
-        def build_indexes(app)
-          indexes = []
-          collections = []
-          collections += app.sitemap.resources.select{|r| r.site_root?}
-          collections += app.sitemap.resources.select{|r| r.collection?}
-          collections.uniq!
-          collections.each do |c|
-            puts "Indexing collection #{c.dirname}"
-            start_time = Time.now
-            index = []
-            resources = app.sitemap.resources.select{|r| !r.ignored? && r.in_collections_dir? && !r.in_metadata_dir?}
-            if !c.site_root?
-              resources = resources.select{|r| r.descendant_of?(c)}
+        def build_index(app)
+          index = []
+          fields = []
+          iris_resources(app).select{|r| r.collection? || r.item? || (r.page? && !r.in_collections_dir?)}.each do |r|
+            puts "Indexing #{r.page_id}"
+            thumbnail = r.thumbnail_url
+            if thumbnail.blank?
+              thumbnail = r.files_in_same_directory.select{|child| child.thumbnail?}.first&.thumbnail_url
             end
-            resources.each do |r|
-              doc = r.rdf_properties.select{|k, v| r.best_index_rules[:properties].include?(k)}
-              doc.merge!({
-                id: r.uri,
-                text: r.index_text
-              })
-              doc.delete_if{|k,v| v.blank?}
-              index << doc
+
+            doc = r.rdf_properties.select{|k, v| r.best_index_rules[:properties].include?(k)}
+            fields << doc.keys
+
+            doc.merge!({
+              id: r.uri,
+              bt: r.best_title,
+              bd: r.best_description,
+              bc: r.best_creator,
+              sc: r.index_scopes.keys, # Scopes
+              co: [r.collection&.best_title, r.collection&.permalink], # Collection
+              tx: r.index_text, # Text
+              tn: thumbnail, # thumbNail
+              i: r.icon, # Icon class
+              ch: [] # Children
+            })
+
+            r.files_in_same_directory.each do |child|
+              time = Time.now
+              child_rdf_properties = child.rdf_properties.select{|k, v| r.best_index_rules[:properties].include?(k)}
+              fields << child_rdf_properties.keys
+
+              doc[:ch] << {
+                id: child.uri,
+                bt: child.best_title,
+                bd: child.best_description,
+                bc: child.best_creator,
+                tx: child.index_text,
+                i: child.icon
+              }.merge(child_rdf_properties)
+
             end
-            c.create_metadata_directory
-            File.open("#{c.metadata_directory_path}/index.json", 'w'){|f| f.write(index.to_json)}
-            puts "Finished in #{Time.now - start_time}"
-            indexes << index
+
+            doc.delete_if{|k,v| v.blank?}
+            doc[:ch]&.delete_if{|k,v| v.blank?}
+            index << doc
+            fields += (doc[:ch]&.map{|child| child.keys} || [])
+            fields += r.files_in_same_directory.map{|child| child.rdf_properties.select{|k, v| r.best_index_rules[:properties].include?(k)}.keys}
           end
-          return indexes
+
+          root = app.sitemap.resources.select{|r| r.site_root?}.first
+          root&.create_metadata_directory
+
+          condensed_index = index.to_json
+
+          tokens = {
+            '@u@' => root.iris_option(:root_url),
+          }
+          fields.flatten.uniq.select{|field| field.present?}.each_with_index do |field, i|
+            tokens["@#{i}@"] = field
+          end
+          tokens.each do |k,v|
+            condensed_index.gsub!(v.to_s, k)
+          end
+
+          json = {
+            tokens: tokens,
+            docs: JSON.parse(condensed_index)
+          }.to_json
+
+          File.open("#{root.metadata_directory_path}/index.json", 'w'){|f| f.write(json)}
+          return nil
+        end
+
+
+        def search_index_url(app)
+          root = app.sitemap.resources.select{|r| r.site_root?}.first
+          return "#{root.permalink}/.metadata/index.json"
         end
 
 

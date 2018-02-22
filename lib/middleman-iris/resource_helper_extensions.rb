@@ -22,6 +22,11 @@ module Middleman
         end
 
 
+        def iris_resource?
+          return !self.ignored? && !self.in_metadata_dir? && (self.in_collections_dir? || self.page?)
+        end
+
+
         def site_root?
           return self.path.start_with?('index.') && self.dirname.match(/\/#{@app.config[:source]}$/)
         end
@@ -38,7 +43,7 @@ module Middleman
 
 
         def files_in_same_directory
-          @app.sitemap.resources.select{|r| same_directory?(self) && r.page_id != self.page_id}
+          @app.sitemap.resources.select{|r| r.same_directory?(self) && r.page_id != self.page_id}
         end
 
 
@@ -69,6 +74,22 @@ module Middleman
             has_parent = current_resource.parent.present?
           end
           return is_descendant
+        end
+
+
+        def collection
+          if self.collection?
+            return self
+          elsif self.parent.blank?
+            return nil
+          end
+          resource = self.parent
+          collection = nil
+          while collection.blank? && resource.present?
+            collection = resource if resource.collection?
+            resource = resource&.parent
+          end
+          return collection
         end
 
 
@@ -151,6 +172,11 @@ module Middleman
           else
             return self.parent&.data&.dig('iris', 'children', self.filename, 'rdf_properties', 'schema:description') || nil
           end
+        end
+
+
+        def best_creator
+          return nil
         end
 
 
@@ -243,6 +269,8 @@ module Middleman
         def uri
           if self.item? || self.collection? || self.site_root?
             return self.permalink
+          elsif self.page? && !self.in_collections_dir?
+            return self.permalink
           else
             return (self.parent&.permalink || '').gsub(/\/$/,'') + '#' + self.uri_slug
           end
@@ -286,12 +314,16 @@ module Middleman
             crumbs << page
             page = page.parent
           end
-          crumbs << @app.sitemap.resources.select{|r| r.path == 'index.html'}.first
+          crumbs << @app.sitemap.resources.select{|r| r.path == 'index.html' && r.page_id != self.page_id}.first
 
-          return crumbs.reverse
+          return crumbs.compact.reverse
         end
 
       module SingletonMethods
+
+        def iris_resources(app)
+          app.sitemap.resources.select{|r| r.iris_resource?}
+        end
 
 
         def sort_resources(resources)

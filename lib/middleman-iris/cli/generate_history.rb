@@ -10,20 +10,17 @@ module Middleman::Cli
                 desc: 'A specific directory for which to generate history.'
 
     def generate_history
-      start_time = Time.now
-      puts "Starting generate_history at #{Time.now}"
-
       @app = ::Middleman::Application.new do
         config[:mode] = :build
         config[:iris_cli] = :history
         ::Middleman::Logger.singleton(1, false)
       end
 
-      # @app.sitemap.resources.each do |r|
-      #   next if r.ignored? || !r.in_collections_dir? || r.instance_of?(Middleman::Sitemap::Extensions::RedirectResource) || r.in_metadata_dir?
-      #   next if options[:directory] && !r.dirname.start_with?(options[:directory])
-      #   r.add_file_history
-      # end
+      start_time = Time.now
+      puts "Starting generate_history at #{Time.now}"
+
+      Middleman::Sitemap::Resource.generate_history(@app.sitemap.resources)
+
       puts "Finished generate_history at #{Time.now} (#{Time.now-start_time} seconds)"
     end
 

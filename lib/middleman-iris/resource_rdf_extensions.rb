@@ -137,7 +137,7 @@ module Middleman
           }}
         elsif self.static_file?
           properties['schema:contentUrl'] = self.filename
-          properties['schema:contentSize'] = self.file_size
+          properties['schema:contentSize'] = self.resource_file_size
           properties['schema:fileFormat'] = MIME::Types.type_for(self.filename).first.to_s
           properties['schema:isPartOf'] = self.parent&.permalink
           properties['schema:thumbnailUrl'] = self.thumbnail_url

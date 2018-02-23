@@ -82,19 +82,26 @@ module Middleman
         @app = app
         ext = self
 
-        app.after_configuration do
-          app.sitemap.register_resource_list_manipulator(:iris, ext)
-        end
-
         app.ready do
-          # Generate index
-          if (app.build? && ext.options[:generate_index_on_build] && app.config[:iris_cli].blank?) ||
-            (app.server? && ext.options[:generate_index_on_serve]) ||
-            app.config[:iris_cli] == :index
+          ext.ignore_resources(app.sitemap.resources)
+          ext.load_metadata(app.sitemap.resources)
 
-            puts 'Generating search index...'
-            ext.build_index(app)
+          if (app.build? && ext.options[:generate_history_on_build] && app.config[:iris_cli].blank?) || (app.server? && ext.options[:generate_history_on_serve])
+            ext.generate_history(app.sitemap.resources)
           end
+
+          if (app.build? && ext.options[:generate_text_on_build] && app.config[:iris_cli].blank?) || (app.server? && ext.options[:generate_text_on_serve])
+            ext.generate_text(app.sitemap.resources)
+          end
+
+          if (app.build? && ext.options[:generate_thumbnails_on_build] && app.config[:iris_cli].blank?) || (app.server? && ext.options[:generate_thumbnails_on_serve])
+            ext.generate_thumbnails(app.sitemap.resources)
+          end
+
+          if (app.build? && ext.options[:generate_index_on_build] && app.config[:iris_cli].blank?) || (app.server? && ext.options[:generate_index_on_serve])
+            ext.generate_index(app)
+          end
+
           # Generate bib metadata formats
 
           # Generate RSS
@@ -103,71 +110,6 @@ module Middleman
         end
       end
 
-
-      def manipulate_resource_list(resources)
-        return resources if @run_once
-        @run_once ||= true
-
-        resources.each do |r|
-          next if r.instance_of?(Middleman::Sitemap::Extensions::RedirectResource)
-
-          # Ignore if YAML front matter indicates so
-          if r.parent&.iris_value('ignore_children') || r.data['ignored']
-            r.ignore!
-          end
-          # Ignore if this filename is designated to ignore in iris options
-          if (options[:filenames_to_ignore] || []).include?(File.basename(r.source_file))
-            r.ignore!
-          end
-        end
-
-        # Generate file history metadata
-        if (app.build? && options[:generate_history_on_build] && app.config[:iris_cli].blank?) ||
-          (app.server? && options[:generate_history_on_serve]) ||
-          app.config[:iris_cli] == :history
-
-          puts 'Generating file history and checksums...'
-          resources.each do |r|
-            next if r.ignored? || !r.in_collections_dir? || r.instance_of?(Middleman::Sitemap::Extensions::RedirectResource) || r.in_metadata_dir?
-            r.add_file_history
-          end
-        end
-
-        # Generate full text for indexing
-        if (app.build? && options[:generate_text_on_build] && app.config[:iris_cli].blank?) ||
-          (app.server? && options[:generate_text_on_serve]) ||
-          app.config[:iris_cli] == :text
-
-          puts 'Generating file text for indexing...'
-          resources.each do |r|
-            next if r.ignored? || !r.in_collections_dir? || r.instance_of?(Middleman::Sitemap::Extensions::RedirectResource) || r.in_metadata_dir?
-            r.rip_text_to_file
-          end
-        end
-
-        # Generate thumbnails
-        if (app.build? && options[:generate_thumbnails_on_build] && app.config[:iris_cli].blank?) ||
-          (app.server? && options[:generate_thumbnails_on_serve]) ||
-          app.config[:iris_cli] == :thumbnails
-
-          puts 'Generating thumbnails...'
-          resources.each do |r|
-            next if r.ignored? || !r.in_collections_dir? || r.instance_of?(Middleman::Sitemap::Extensions::RedirectResource) || r.in_metadata_dir?
-            r.generate_thumbnail
-          end
-        end
-
-        # Load metadata
-        if resources.present?
-          puts 'Loading metadata from defaults, templates, and parents...'
-          resources.each do |r|
-            next unless r.iris_resource?
-            r.load_metadata
-          end
-        end
-
-        return resources
-      end
 
     end
   end

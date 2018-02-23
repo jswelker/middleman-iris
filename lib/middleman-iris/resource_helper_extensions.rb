@@ -98,17 +98,8 @@ module Middleman
         end
 
 
-        def file_size
-          size = File.size(self.source_file)
-          if size < 1024
-            return "#{size} B"
-          elsif size < (1024 * 1024)
-            return "#{(size/1024.0).round(2)} KB"
-          elsif size < (1024 * 1024 * 1024)
-            return "#{(size/(1024*1024)).round(2)} MB"
-          else
-            return "#{(size/(1024*1024*1024)).round(2)} GB"
-          end
+        def resource_file_size
+          return self.class.file_size(self.source_file)
         end
 
 
@@ -365,6 +356,20 @@ module Middleman
             return parent_collection.children.select{|r| r.data&.dig('iris', 'featured')}
           else
             return sitemap.resources.select{|r| r.data&.dig('iris', 'featured')}
+          end
+        end
+
+
+        def file_size(filename)
+          size = File.size(filename)
+          if size < 1024
+            return "#{size} B"
+          elsif size < (1024 * 1024)
+            return "#{(size/1024.0).round(2)} KB"
+          elsif size < (1024 * 1024 * 1024)
+            return "#{(size/(1024*1024)).round(2)} MB"
+          else
+            return "#{(size/(1024*1024*1024)).round(2)} GB"
           end
         end
 

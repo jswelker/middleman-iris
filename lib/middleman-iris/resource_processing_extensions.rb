@@ -48,7 +48,7 @@ module Middleman
 
 
       def text_file_path
-        "#{self.dirname}/_metadata/#{self.filename}.txt"
+        "#{self.dirname}/.metadata/#{self.filename}.txt"
       end
 
 
@@ -232,7 +232,61 @@ module Middleman
 
       module SingletonMethods
 
-        def build_index(app)
+
+        def ignore_resources(resources)
+          resources.each do |r|
+            next if r.instance_of?(Middleman::Sitemap::Extensions::RedirectResource)
+
+            # Ignore if YAML front matter indicates so
+            if r.parent&.iris_value('ignore_children') || r.data['ignored']
+              r.ignore!
+            end
+            # Ignore if this filename is designated to ignore in iris options
+            if (options[:filenames_to_ignore] || []).include?(File.basename(r.source_file))
+              r.ignore!
+            end
+          end
+        end
+
+
+        def load_metadata(resources)
+          puts 'Loading metadata from defaults, templates, and parents...'
+          resources.each do |r|
+            next unless r.iris_resource?
+            r.load_metadata
+          end
+        end
+
+
+        # Generate file history metadata
+        def generate_history(resources)
+          puts 'Generating file history and checksums...'
+          resources.each do |r|
+            next if r.ignored? || !r.in_collections_dir? || r.instance_of?(Middleman::Sitemap::Extensions::RedirectResource) || r.in_metadata_dir?
+            r.add_file_history
+          end
+        end
+
+
+        def generate_text(resources)
+          puts 'Generating file text for indexing...'
+          resources.each do |r|
+            next if r.ignored? || !r.in_collections_dir? || r.instance_of?(Middleman::Sitemap::Extensions::RedirectResource) || r.in_metadata_dir?
+            r.rip_text_to_file
+          end
+        end
+
+
+        def generate_thumbnails(resources)
+          puts 'Generating thumbnails...'
+          resources.each do |r|
+            next if r.ignored? || !r.in_collections_dir? || r.instance_of?(Middleman::Sitemap::Extensions::RedirectResource) || r.in_metadata_dir?
+            r.generate_thumbnail
+          end
+        end
+
+
+        def generate_index(app)
           index = []
           fields = []
           iris_resources(app).select{|r| r.collection? || r.item? || (r.page? && !r.in_collections_dir?)}.each do |r|
@@ -301,7 +355,9 @@ module Middleman
             docs: JSON.parse(condensed_index)
           }.to_json
 
-          File.open("#{root.metadata_directory_path}/index.json", 'w'){|f| f.write(json)}
+          filename = "#{root.metadata_directory_path}/index.json"
+          File.open(filename, 'w'){|f| f.write(json)}
+          puts "Index file is #{file_size(filename)} at #{filename}"
           return nil
         end
 

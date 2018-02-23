@@ -14,20 +14,17 @@ module Middleman::Cli
                 desc: 'A specific directory for which to generate text.'
 
     def generate_text
-      start_time = Time.now
-      puts "Starting generate_text at #{Time.now}"
       @app = ::Middleman::Application.new do
         config[:mode] = :build
         config[:iris_cli] = :text
         ::Middleman::Logger.singleton(1, false)
       end
 
-      # @app.sitemap.resources.each do |r|
-      #   next if r.ignored? || !r.in_collections_dir? || r.instance_of?(Middleman::Sitemap::Extensions::RedirectResource) || r.in_metadata_dir?
-      #   next if r.text.present? && !options[:regenerate]
-      #   next if options[:directory] && !r.dirname.start_with?(options[:directory])
-      #   r.generate_text
-      # end
+      start_time = Time.now
+      puts "Starting generate_text at #{Time.now}"
+
+      Middleman::Sitemap::Resource.generate_text(@app.sitemap.resources)
+
       puts "Finished generate_text at #{Time.now} (#{Time.now-start_time} seconds)"
     end
 

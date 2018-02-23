@@ -268,20 +268,20 @@ module Middleman
         end
 
 
-        def generate_text(resources)
+        def generate_text(resources, force_regenerate=false)
           puts 'Generating file text for indexing...'
           resources.each do |r|
             next if r.ignored? || !r.in_collections_dir? || r.instance_of?(Middleman::Sitemap::Extensions::RedirectResource) || r.in_metadata_dir?
-            r.rip_text_to_file
+            r.rip_text_to_file(force_regenerate)
           end
         end
 
 
-        def generate_thumbnails(resources)
+        def generate_thumbnails(resources, force_regenerate=false)
           puts 'Generating thumbnails...'
           resources.each do |r|
             next if r.ignored? || !r.in_collections_dir? || r.instance_of?(Middleman::Sitemap::Extensions::RedirectResource) || r.in_metadata_dir?
-            r.generate_thumbnail
+            r.generate_thumbnail(force_regenerate)
           end
         end
 

@@ -22,8 +22,12 @@ module Middleman::Cli
 
       start_time = Time.now
       puts "Starting generate_thumbnails at #{Time.now}"
-
-      Middleman::Sitemap::Resource.generate_thumbnails(@app.sitemap.resources)
+      
+      resources = @app.sitemap.resources
+      if options[:directory].present?
+        resources = resources.select{|r| r.source_file.downcase.start_with?(options[:directory].downcase)}
+      end
+      Middleman::Sitemap::Resource.generate_thumbnails(resources, options[:regenerate])
 
       puts "Finished generate_thumbnails at #{Time.now} (#{Time.now-start_time} seconds)"
     end

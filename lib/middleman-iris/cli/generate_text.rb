@@ -23,7 +23,11 @@ module Middleman::Cli
       start_time = Time.now
       puts "Starting generate_text at #{Time.now}"
 
-      Middleman::Sitemap::Resource.generate_text(@app.sitemap.resources)
+      resources = @app.sitemap.resources
+      if options[:directory].present?
+        resources = resources.select{|r| r.source_file.start_with?(options[:directory])}
+      end
+      Middleman::Sitemap::Resource.generate_text(resources, options[:regenerate])
 
       puts "Finished generate_text at #{Time.now} (#{Time.now-start_time} seconds)"
     end

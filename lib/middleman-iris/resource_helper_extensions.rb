@@ -17,11 +17,6 @@ module Middleman
         end
 
 
-        def iris_option(option)
-          return @app.extensions[:iris].options[option]
-        end
-
-
         def iris_resource?
           return !self.ignored? && !self.in_metadata_dir? && (self.in_collections_dir? || self.page?)
         end
@@ -33,7 +28,7 @@ module Middleman
 
 
         def in_collections_dir?
-          self.source_file.start_with?( "#{@app.root}/#{@app.config[:source]}/#{iris_option(:collections_dir)}" )
+          self.source_file.start_with?( "#{@app.root}/#{@app.config[:source]}/#{@app.extensions[:iris].options[:collections_dir]}" )
         end
 
 
@@ -257,7 +252,7 @@ module Middleman
           if @app.server?
           "http://localhost:#{@app.config.port}#{self.url}"
           else
-            self.data.dig('iris', 'permalink') || iris_option(:root_url) + self.url
+            self.data.dig('iris', 'permalink') || @app.extensions[:iris].options[:root_url] + self.url
           end
         end
 

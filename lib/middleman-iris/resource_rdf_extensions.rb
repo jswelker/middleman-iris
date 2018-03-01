@@ -88,14 +88,14 @@ module Middleman
 
 
       def rdf_class_uris
-        return self.rdf_classes.map{|c| self.vocabularies[c.split(':').first] + c.split(':').last}
+        return self.rdf_classes.map{|c| self.class.vocabularies(@app)[c.split(':').first] + c.split(':').last}
       end
 
 
       def is_vocabulary?(vocabulary)
         is_vocab = false
         rdf_classes.each do |c|
-          is_vocab = true if c.start_with?(vocabulary) || c == self.vocabularies[vocabulary]
+          is_vocab = true if c.start_with?(vocabulary) || c == self.class.vocabularies(@app)[vocabulary]
         end
         return is_vocab
       end
@@ -113,9 +113,9 @@ module Middleman
           'schema:identifier' => self.uri,
           'schema:dateModified' => self.last_timestamp,
           'schema:datePublished' => self.first_timestamp,
-          'schema:provider' => iris_option(:organization_name),
+          'schema:provider' => @app.extensions[:iris].options[:organization_name],
           'schema:url' => self.permalink,
-          'schema:inLanguage' => iris_option(:default_language_code),
+          'schema:inLanguage' => @app.extensions[:iris].options[:default_language_code],
           'schema:disambiguatingDescription' => "#{self.last_checksum} (SHA256)"
         }
 
@@ -148,20 +148,6 @@ module Middleman
       end
 
 
-      def vocabularies
-        return {
-          'rdf' => 'http://www.w3.org/1999/02/22-rdf-syntax-ns#',
-          'rdfs' => 'http://www.w3.org/2000/01/rdf-schema#',
-          'schema' => 'http://schema.org/',
-          'dc' => 'http://purl.org/dc/terms/',
-          'bf' => 'http://id.loc.gov/ontologies/bibframe/',
-          'bflc' => 'http://id.loc.gov/ontologies/bflc/',
-          'foaf' => 'http://xmlns.com/foaf/0.1/',
-          'local' => iris_option(:root_url)
-        }
-      end
-
-
       def to_vocabulary(vocabulary, hash={})
         if hash.present?
           return self.class.recursive_convert_to_vocabulary(hash, vocabulary, @app)
@@ -171,9 +157,8 @@ module Middleman
       end
 
 
-
       def rdfa_prefix_string
-        return self.vocabularies.map{|k, v| "#{k}: #{v}"}.join(' ')
+        return self.class.vocabularies(@app).map{|k, v| "#{k}: #{v}"}.join(' ')
       end
 
 
@@ -188,20 +173,9 @@ module Middleman
       end
 
 
-      def jsonld_context
-        return {
-          '_id' => '@id',
-          '_type' => '@type',
-          '_value' => '@value',
-          '_label' => 'http://www.w3.org/2000/01/rdf-schema#label',
-          '@vocab' => iris_option(:root_url)
-        }.merge(self.vocabularies)
-      end
-
-
       def to_jsonld
         return {
-          '@context' => self.jsonld_context,
+          '@context' => self.class.jsonld_context(@app),
           '@id' => self.uri,
           '@type' => self.rdf_class_uris,
         }.deep_merge(self.rdf_properties).to_json
@@ -211,34 +185,39 @@ module Middleman
       def to_jsonld_graph
         rdf_objects = [self] + self.children_in_same_directory
         jsonld = {
-          '@context' => self.jsonld_context,
+          '@context' => self.class.jsonld_context(@app),
           '@graph' => rdf_objects.map{|o| {'@id' => o.uri, '@type' => o.rdf_class_uris }.deep_merge(o.rdf_properties) }
         }
         return jsonld.to_json
       end
 
 
-      def to_rdf_graph(bundle)
-        if bundle
-          graph = RDF::Graph.new << JSON::LD::API.toRdf(JSON.parse(self.to_jsonld))
-        else
-          graph = RDF::Graph.new << JSON::LD::API.toRdf(JSON.parse(self.to_jsonld_bundle))
-        end
-      end
-
-
-      def to_turtle(bundle)
-        return self.to_rdf_graph(bundle).to_ttl
-      end
-
-
-      def to_ntriples(bundle)
-        return self.to_rdf_graph(bundle).to_ntriples
-      end
-
-
-
       module SingletonMethods
+
+
+        def vocabularies(app)
+          return {
+            'rdf' => 'http://www.w3.org/1999/02/22-rdf-syntax-ns#',
+            'rdfs' => 'http://www.w3.org/2000/01/rdf-schema#',
+            'schema' => 'http://schema.org/',
+            'dc' => 'http://purl.org/dc/terms/',
+            'bf' => 'http://id.loc.gov/ontologies/bibframe/',
+            'bflc' => 'http://id.loc.gov/ontologies/bflc/',
+            'foaf' => 'http://xmlns.com/foaf/0.1/',
+            'local' => app.extensions[:iris].options[:root_url]
+          }
+        end
+
+
+        def jsonld_context(app)
+          return {
+            '_id' => '@id',
+            '_type' => '@type',
+            '_value' => '@value',
+            '_label' => 'http://www.w3.org/2000/01/rdf-schema#label',
+            '@vocab' => app.extensions[:iris].options[:root_url]
+          }.merge(vocabularies(app))
+        end
 
 
         def convert_property_to_vocabulary(property, vocabulary, app)

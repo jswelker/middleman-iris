@@ -5,7 +5,6 @@ module Middleman::Cli
     check_unknown_options!
 
     class_option :directory,
-                aliases: '-e',
                 default: nil,
                 desc: 'A specific directory for which to generate history.'
 

@@ -150,6 +150,16 @@ module Middleman
       end
 
 
+      def child_thumbnail?
+        self.children.select{|child| child.thumbnail?}.first.present?
+      end
+
+
+      def child_thumbnail_url
+        self.children.select{|child| child.thumbnail?}.first.thumbnail_url
+      end
+
+
       def generate_thumbnail(force_regenerate=false)
         return if !self.in_collections_dir? || self.ignored?
         return if self.last_checksum == self.current_checksum && !force_regenerate && self.thumbnail?
@@ -249,12 +259,13 @@ module Middleman
         end
 
 
-        def load_metadata(resources)
+        def load_metadata_from_files(resources)
           puts 'Loading metadata from defaults, templates, and parents...'
           resources.each do |r|
             next unless r.iris_resource?
             r.load_metadata
           end
+          puts 'Done loading metadata'
         end
 
 
@@ -282,6 +293,119 @@ module Middleman
           resources.each do |r|
             next if r.ignored? || !r.in_collections_dir? || r.instance_of?(Middleman::Sitemap::Extensions::RedirectResource) || r.in_metadata_dir?
             r.generate_thumbnail(force_regenerate)
+          end
+        end
+
+
+        def generate_rss(app, limit=100)
+          puts 'Generating RSS feed...'
+
+          rss = RSS::Maker.make("atom") do |maker|
+            maker.channel.author = app.extensions[:iris].options[:organization_name]
+            maker.channel.updated = Time.now.to_s
+            maker.channel.about = app.extensions[:iris].options[:site_name]
+            maker.channel.title = "#{app.extensions[:iris].options[:site_name]} - RSS Feed"
+
+            app.sitemap.resources.select{|r| r.item?}.first(limit).each do |r|
+              maker.items.new_item do |entry|
+                entry.link = r.permalink
+                entry.title = r.best_title
+                entry.updated = r.last_timestamp&.to_s || r.mtime&.to_s || Time.now.to_s
+              end
+            end
+          end
+
+          root = app.sitemap.resources.select{|r| r.site_root?}.first
+          root&.create_metadata_directory
+
+          filename = "#{root.metadata_directory_path}/index.atom"
+          File.open(filename, 'w'){|f| f.write(rss)}
+          return nil
+        end
+
+
+        def rss_url(app)
+          root = app.sitemap.resources.select{|r| r.site_root?}.first
+          return "#{root.permalink}.metadata/index.atom"
+        end
+
+
+        def generate_oai(app)
+          resources = app.sitemap.resources.select{|r| r.iris_resource? && r.item?}
+
+          builder = Nokogiri::XML::Builder.new do |xml|
+            xml.Repository(
+              'xmlns' => 'http://www.openarchives.org/OAI/2.0/static-repository',
+              'xmlns:oai' => 'http://www.openarchives.org/OAI/2.0/',
+              'xmlns:xsi' => 'http://www.w3.org/2001/XMLSchema-instance',
+              'xsi:schemaLocation' => 'http://www.openarchives.org/OAI/2.0/static-repository http://www.openarchives.org/OAI/2.0/static-repository.xsd'
+            ) do
+
+              xml.Identify {
+                xml['oai'].repositoryName app.extensions[:iris].options[:site_name]
+                xml['oai'].baseUrl app.extensions[:iris].options[:oai_static_repository_gateway_url] || oai_url(app)
+                xml['oai'].protocolVersion '2.0'
+                app.extensions[:iris].options[:admin_email].split(',').each do |email|
+                  xml['oai'].adminEmail email.strip
+                end
+                xml['oai'].earliestDatestamp resources.sort{|r| r.first_timestamp&.to_i}.first.first_timestamp
+                xml['oai'].granularity 'YYYY-MM-DDThh:mm:ssZ'
+              }
+
+              xml.ListMetadataFormats {
+                xml['oai'].metadataPrefix 'oai_dc'
+                xml['oai'].schema 'http://www.openarchives.org/OAI/2.0/oai_dc.xsd'
+                xml['oai'].metadataNamespace 'http://www.openarchives.org/OAI/2.0/oai_dc/'
+              }
+
+              xml.ListRecords('metadataPrefix' => 'oai_dc') do
+                resources.each do |resource|
+                  xml['oai'].record {
+                    xml['oai'].header {
+                      xml['oai'].identifier resource.uri
+                      xml['oai'].datestamp resource.last_timestamp.iso8601
+                    }
+                    xml['oai'].metadata {
+                      xml['oai'].dc(
+                        'xmlns:oai_dc' => 'http://www.openarchives.org/OAI/2.0/oai_dc/',
+                        'xmlns:dc' => 'http://purl.org/dc/elements/1.1/',
+                        'xmlns:xsi' => 'http://www.w3.org/2001/XMLSchema-instance',
+                        'xmlns:schemaLocation' => 'http://www.openarchives.org/OAI/2.0/oai_dc/ http://www.openarchives.org/OAI/2.0/oai_dc.xsd'
+                      ) do
+
+                        resource.to_vocabulary('dcmes', resource.to_vocabulary('dc')).each do |k, v|
+                          if v.instance_of?(Array) || v.instance_of?(Hashie::Array)
+                            v.uniq.each do |array_v|
+                              xml['dc'].send(k.split(':').last, stringify_nested_property(array_v))
+                            end
+                          elsif v.instance_of?(Hash) || v.instance_of?(Middleman::Util::EnhancedHash)
+                            xml['dc'].send(k.split(':').last, stringify_nested_property(v))
+                          else
+                            xml['dc'].send(k.split(':').last, v)
+                          end
+                        end
+
+                      end
+                    }
+                  }
+                end
+              end
+
+            end
+          end
+
+          root = app.sitemap.resources.select{|r| r.site_root?}.first
+          root&.create_metadata_directory
+          filename = "#{root.metadata_directory_path}/oai-pmh.xml"
+          File.open(filename, 'w'){|f| f.write(builder.to_xml)}
+          return nil
+        end
+
+
+        def oai_url(app)
+          def rss_url(app)
+            root = app.sitemap.resources.select{|r| r.site_root?}.first
+            return "#{root.permalink}.metadata/oai-pmh.xml"
           end
         end
 
@@ -341,7 +465,7 @@ module Middleman
           condensed_index = index.to_json
 
           tokens = {
-            '@u@' => root.iris_option(:root_url),
+            '@u@' => app.extensions[:iris].options[:root_url],
           }
           fields.flatten.uniq.select{|field| field.present?}.each_with_index do |field, i|
             tokens["@#{i}@"] = field
@@ -364,7 +488,7 @@ module Middleman
 
         def search_index_url(app)
           root = app.sitemap.resources.select{|r| r.site_root?}.first
-          return "#{root.permalink}/.metadata/index.json"
+          return "#{root.permalink}.metadata/index.json"
         end
 
 

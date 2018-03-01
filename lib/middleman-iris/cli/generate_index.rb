@@ -15,7 +15,7 @@ module Middleman::Cli
       puts "Starting generate_index at #{Time.now}"
 
       Middleman::Sitemap::Resource.generate_index(@app)
-      
+
       puts "Finished generate_index at #{Time.now} (#{Time.now-start_time} seconds)"
     end
 

@@ -5,11 +5,9 @@ module Middleman::Cli
     check_unknown_options!
 
     class_option :regenerate,
-                aliases: '-e',
                 default: false,
                 desc: 'Whether to regenerate text that already exists.'
     class_option :directory,
-                aliases: '-e',
                 default: nil,
                 desc: 'A specific directory for which to generate text.'
 

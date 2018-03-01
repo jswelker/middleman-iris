@@ -172,52 +172,52 @@ module Middleman
 
 
         def collection?
-          return self.data.dig('iris', 'collection') || false
+          return (self.data.dig('iris', 'collection') || false) && !self.in_metadata_dir? && self.in_collections_dir?
         end
 
 
         def item?
-          return self.directory_index? && !self.collection?
+          return self.directory_index? && !self.collection? && !self.in_metadata_dir? && self.in_collections_dir?
         end
 
 
         def page?
-          self.ext.include?('.htm') && !self.directory_index?
+          self.ext.include?('.htm') && !self.directory_index? && !self.in_metadata_dir? && self.in_collections_dir?
         end
 
 
         def static_file?
-          !page?
+          !page? && !collection && !self.in_metadata_dir? && self.in_collections_dir?
         end
 
 
         def img?
-          return %w(.png .jpg .jpeg .tif .tiff .gif).include?(self.ext)
+          return %w(.png .jpg .jpeg .tif .tiff .gif).include?(self.ext) && !self.in_metadata_dir? && self.in_collections_dir?
         end
 
 
         def pdf?
-          return %w(.pdf).include?(self.ext)
+          return %w(.pdf).include?(self.ext) && !self.in_metadata_dir? && self.in_collections_dir?
         end
 
 
         def spreadsheet?
-          return %w(.xls .xlsx .csv .ods).include?(self.ext)
+          return %w(.xls .xlsx .csv .ods).include?(self.ext) && !self.in_metadata_dir? && self.in_collections_dir?
         end
 
 
         def word_doc?
-          return %w(.doc .docx .odt).include?(self.ext)
+          return %w(.doc .docx .odt).include?(self.ext) && !self.in_metadata_dir? && self.in_collections_dir?
         end
 
 
         def powerpoint?
-          return %w(.ppt .pptx .odp).include?(self.ext)
+          return %w(.ppt .pptx .odp).include?(self.ext) && !self.in_metadata_dir? && self.in_collections_dir?
         end
 
 
         def textfile?
-          return %w(.txt .rtf).include?(self.ext)
+          return %w(.txt .rtf).include?(self.ext) && !self.in_metadata_dir? && self.in_collections_dir?
         end
 
 
@@ -236,6 +236,11 @@ module Middleman
           return 'file' if self.static_file?
           return 'item' if self.item?
           return 'page' if self.page?
+        end
+
+
+        def featured?
+          return self.iris_value(:featured)
         end
 
 
@@ -343,20 +348,6 @@ module Middleman
 
         def root_collections(sort=true)
           collections(sort).select{|r| r.parent.blank?}
-        end
-
-
-        def recently_added(parent_collection, limit)
-
-        end
-
-
-        def featured_items(parent_collection)
-          if parent_collection.present?
-            return parent_collection.children.select{|r| r.data&.dig('iris', 'featured')}
-          else
-            return sitemap.resources.select{|r| r.data&.dig('iris', 'featured')}
-          end
         end
 
 

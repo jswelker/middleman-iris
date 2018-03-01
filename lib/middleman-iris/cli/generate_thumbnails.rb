@@ -5,11 +5,9 @@ module Middleman::Cli
     check_unknown_options!
 
     class_option :regenerate,
-                aliases: '-e',
                 default: false,
                 desc: 'Whether to regenerate thumbnails that already exist.'
     class_option :directory,
-                aliases: '-e',
                 default: nil,
                 desc: 'A specific directory for which to generate thumbnails.'
 
@@ -22,7 +20,7 @@ module Middleman::Cli
 
       start_time = Time.now
       puts "Starting generate_thumbnails at #{Time.now}"
-      
+
       resources = @app.sitemap.resources
       if options[:directory].present?
         resources = resources.select{|r| r.source_file.downcase.start_with?(options[:directory].downcase)}

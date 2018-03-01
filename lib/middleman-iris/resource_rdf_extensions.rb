@@ -13,13 +13,12 @@ module Middleman
 
       def load_metadata
         front_matter = self.data
-        complete_metadata = self.default_schema_properties
-          .deep_merge(metadata_from_templates)
-          .deep_merge(metadata_from_parent)
-          .deep_merge(metadata_from_file)
-          .deep_merge(front_matter)
-        complete_metadata ||= Middleman::Util.recursively_enhance({})
-
+        complete_metadata = self.default_rdf_properties
+        complete_metadata.deep_merge!(metadata_from_templates){|k, v1, v2| [v1].flatten + [v2].flatten}
+        complete_metadata.deep_merge!(metadata_from_parent){|k, v1, v2| [v1].flatten + [v2].flatten}
+        complete_metadata.deep_merge!(metadata_from_file){|k, v1, v2| [v1].flatten + [v2].flatten}
+        complete_metadata.deep_merge!(front_matter){|k, v1, v2| [v1].flatten + [v2].flatten}
+        complete_metametadata ||= Middleman::Util.recursively_enhance({})
         self.page_data = complete_metadata
         return complete_metadata
       end
@@ -48,7 +47,9 @@ module Middleman
         metadata = Middleman::Util.recursively_enhance({})
         templates.each do |template|
           template_data = @app.data.to_h.dig(*template.split('/'))
-          metadata.deep_merge!(template_data) unless template_data.blank?
+          if template_data.present?
+            metadata.deep_merge!(template_data){|k, v1, v2| [v1].flatten + [v2].flatten}
+          end
         end
         metadata
       end
@@ -106,18 +107,6 @@ module Middleman
 
 
       def default_rdf_properties
-        properties = {}
-        if self.is_vocabulary?('schema')
-          properties = default_schema_properties
-        elsif self.is_vocabulary?('rdf')
-          properties = default_bibframe_properties
-        end
-        return properties
-      end
-
-
-      def default_schema_properties
-
         properties = {
           'schema:name' => self.best_title,
           'schema:description' => self.best_description,
@@ -145,14 +134,17 @@ module Middleman
           properties['schema:mainEntity'] = self.parent&.permalink
           properties['schema:isPartOf'] = self.parent&.permalink
         end
+        properties_enhanced_hash = Middleman::Util.recursively_enhance({iris: {rdf_properties: properties}})
+        if self.is_vocabulary?('schema')
+          return properties_enhanced_hash
+        elsif self.is_vocabulary?('dc')
+          return self.recursive_convert_to_vocabulary(properties_enhanced_hash, 'dc', app)
+        elsif self.is_vocabulary?('bf')
+          return self.recursive_convert_to_vocabulary(properties_enhanced_hash, 'bf', app)
+        else
+          return self.recursive_convert_to_vocabulary(properties_enhanced_hash, 'dc', app)
+        end
 
-        return Middleman::Util.recursively_enhance({iris: {rdf_properties: properties}})
-      end
-
-
-      def default_bibframe_properties
-        # TODO
-        {}
       end
 
 
@@ -168,6 +160,16 @@ module Middleman
           'local' => iris_option(:root_url)
         }
       end
+
+
+      def to_vocabulary(vocabulary, hash={})
+        if hash.present?
+          return self.class.recursive_convert_to_vocabulary(hash, vocabulary, @app)
+        else
+          return self.class.recursive_convert_to_vocabulary(self.rdf_properties, vocabulary, @app)
+        end
+      end
+
 
 
       def rdfa_prefix_string
@@ -235,7 +237,46 @@ module Middleman
       end
 
 
+
       module SingletonMethods
+
+
+        def convert_property_to_vocabulary(property, vocabulary, app)
+          new_property = app.extensions[:iris].metadata_mappings[property]&.select{|property| property.split(':').first == vocabulary}&.first
+          if %(_id _type _value _label).include?(property)
+            new_property = property
+          end
+          return new_property
+        end
+
+
+        def recursive_convert_to_vocabulary(value, vocabulary, app)
+          new_value = value
+          if value.instance_of?(Array) || value.instance_of?(Hashie::Array)
+            new_value = Hashie::Array.new
+            value.each do |v|
+              new_value << recursive_convert_to_vocabulary(v, vocabulary, app)
+            end
+          elsif (value.instance_of?(Hash) || value.instance_of?(Middleman::Util::EnhancedHash))
+            new_value = Middleman::Util::EnhancedHash.new
+            value.each do |k, v|
+              new_property = convert_property_to_vocabulary(k, vocabulary, app)
+              if new_value[new_property].present? && new_property.present?
+                existing_value = new_value[new_property]
+                new_value[new_property] = Hashie::Array.new
+                if existing_value.instance_of?(Array) || existing_value.instance_of?(Hashie::Array)
+                  new_value[new_property] += existing_value
+                else
+                  new_value[new_property] << existing_value
+                end
+                new_value[new_property] << recursive_convert_to_vocabulary(v, vocabulary, app)
+              else
+                new_value[new_property] = recursive_convert_to_vocabulary(v, vocabulary, app) if new_property.present?
+              end
+            end
+          end
+          return new_value
+        end
 
 
         def recursive_unpack_structure_to_rdfa(k, v, element1='div', element2='div', element3='span')
@@ -283,6 +324,22 @@ module Middleman
           end
 
           return html.html_safe
+        end
+
+
+        def stringify_nested_property(value)
+          if value.instance_of?(Hash) || value.instance_of?(Middleman::Util::EnhancedHash)
+            label = value['_label'] || value['schema:name'] || value['dc:title'] || value['dcmes:title'] || value['bf:title'] || value['title']
+            if label.present?
+              return label
+            else
+              return v.keys.first
+            end
+          elsif value.instance_of?(Array) || value.instance_of?(Hashie::Array)
+            return value.first
+          else
+            return value
+          end
         end
 
       end # END MODULE SingletonMethods

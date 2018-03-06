@@ -2,6 +2,7 @@ require 'rdf'
 require "rdf/rdfxml"
 require "rdf/turtle"
 require "json/ld"
+require "marc"
 require "mime-types"
 require "rmagick"
 require "pdf-reader"

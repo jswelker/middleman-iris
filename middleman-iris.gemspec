@@ -11,7 +11,7 @@ Gem::Specification.new do |spec|
 
   spec.summary       = %q{This is a short description.}
   spec.description   = %q{This is a longer description.}
-  spec.homepage      = "http://my.url"
+  spec.homepage      = "http://library.ucmo.edu"
   spec.license       = "MIT"
 
   # Prevent pushing this gem to RubyGems.org. To allow pushes either set the 'allowed_push_host'
@@ -36,6 +36,7 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency("rdf-rdfxml", "~> 2.2")
   spec.add_runtime_dependency("rdf-turtle", "~> 3.0")
   spec.add_runtime_dependency("json-ld", "~> 2.2")
+  spec.add_runtime_dependency("marc", "~> 1.0")
   spec.add_runtime_dependency("mime-types", "~> 3.1")
   spec.add_runtime_dependency("rmagick", "~> 2.16")
   spec.add_runtime_dependency("pdf-reader", "~> 2.0")
@@ -44,7 +45,7 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency("object_flatten", "~> 0.1")
   spec.add_runtime_dependency("httparty", "~> 0.15")
 
-  spec.add_development_dependency "bundler", "~> 1.14"
-  spec.add_development_dependency "rake", "~> 10.0"
-  spec.add_development_dependency "minitest", "~> 5.0"
+  spec.add_development_dependency("bundler", "~> 1.14")
+  spec.add_development_dependency("rake", "~> 10.0")
+  spec.add_development_dependency("minitest", "~> 5.0")
 end

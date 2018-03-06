@@ -110,7 +110,7 @@ module Middleman
             File.open(text_file_path, 'w'){|f| f.write text}
           elsif powerpoint? && Dir.exists?(@app.extensions[:iris].options[:libreoffice_dir])
             # Rip Powerpoint files to PDF using LibreOffice CLI and then from PDF to txt using pdf-reader library
-            system("\"#{@app.extensions[:iris].options[:libreoffice_dir}/soffice.exe\" --headless --convert-to pdf \"#{self.source_file}\" --outdir \"#{metadata_directory_path}\"")
+            system("\"#{@app.extensions[:iris].options[:libreoffice_dir]}/soffice.exe\" --headless --convert-to pdf \"#{self.source_file}\" --outdir \"#{metadata_directory_path}\"")
             pdf_path = text_file_path.gsub(self.ext+'.txt', '.pdf')
             reader = PDF::Reader.new(pdf_path)
             page_text = []
@@ -416,12 +416,10 @@ module Middleman
             '@context' => jsonld_context(app),
             '@graph' => resources.map{|r| {'@id' => r.uri, '@type' => r.rdf_class_uris }.deep_merge(r.rdf_properties) }
           }
-          json = jsonld.to_json
-
-          graph = RDF::Graph.new << JSON::LD::API.toRdf(json)
-          ttl = graph.dump(:ttl, prefixes: r.class.vocabularies(app))
-          rdfxml = graph.dump(:rdfxml, prefixes: r.class.vocabularies(app))
-          ntriples = graph.dump(:ntriples, prefixes: r.class.vocabularies(app))
+          graph = RDF::Graph.new << JSON::LD::API.toRdf(jsonld)
+          ttl = graph.dump(:ttl, prefixes: vocabularies(app))
+          rdfxml = graph.dump(:rdfxml, prefixes: vocabularies(app))
+          ntriples = graph.dump(:ntriples, prefixes: vocabularies(app))
 
           root = app.sitemap.resources.select{|r| r.site_root?}.first
           root&.create_metadata_directory

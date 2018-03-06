@@ -1,5 +1,6 @@
 # Resources:
 # https://github.com/dcmi/schema.org
+# https://www.loc.gov/marc/dccross.html
 
 # Schema classes covered:
 # Thing
@@ -88,161 +89,212 @@ dc:Text:
 dc:contributor:
   - dcmes:contributor
   - schema:contributor
+  - marc:720##$a
 dc:coverage:
   - dcmes:coverage
   - schema:mentions
+  - marc:500##$a
 dc:creator:
   - dcmes:creator
   - schema:creator
+  - marc:720##$a
 dc:date:
   - dcmes:date
   - schema:dateCreated
+  - marc:260##$c
 dc:description:
   - dcmes:description
   - schema:description
+  - marc:520##$a
 dc:format:
   - dcmes:format
   - schema:description
+  - marc:856##$q
 dc:identifier:
   - dcmes:identifier
   - schema:identifier
+  - marc:0248#$a
 dc:language:
   - dcmes:language
   - schema:inLanguage
-dc:license:
-  - dcmes:license
-  - schema:license
+  - marc:546##$a
 dc:publisher:
   - dcmes:publisher
   - schema:publisher
 dc:relation:
   - dcmes:relation
   - schema:mentions
+  - marc:260##$b
+  - marc:7870#$n
 dc:rights:
   - dcmes:rights
   - schema:license
+  - marc:540##$a
 dc:source:
   - dcmes:source
   - schema:isBasedOn
+  - marc:7860#$n
 dc:subject:
   - dcmes:subject
   - schema:about
+  - marc:653##$a
 dc:title:
   - dcmes:title
   - schema:name
+  - marc:24500$a
 dc:type:
   - dcmes:type
   - schema:additionalType
+  - marc:655#7$a
 
 # DCTERMS qualified properties (newer)
 dc:abstract:
   - dcmes:description
   - schema:description
+  - marc:520##$a
 dc:accessRights:
   - dcmes:rights
   - schema:license
+  - marc:506##$a
 dc:accrualMethod:
   - schema:description
+  - marc:541##$c
 dc:accrualPeriodicity:
   - schema:description
+  - marc:310##$a
 dc:accrualPolicy:
   - schema:description
 dc:alternative:
   - dcmes:title
   - schema:alternateName
+  - marc:24633$a
 dc:audience:
   - schema:audience
+  - marc:521##$a
 dc:available:
   - dcmes:date
   - schema:availableThrough
+  - marc:307##$a
 dc:bibliographicCitation:
   - dcmes:identifier
   - schema:citation
+  - marc:500##$a
 dc:conformsTo:
   - dcmes:relation
   - schema:publishingPrinciples
+  - marc:7870#$n
 dc:created:
   - dcmes:date
   - schema:dateCreated
+  - marc:046##$k
 dc:dateAccepted:
   - dcmes:date
   - schema:datePublished
+  - marc:502##$a
 dc:dateCopyrighted:
   - dcmes:date
   - schema:copyrightYear
+  - marc:542##$g
 dc:dateSubmitted:
   - dcmes:date
   - schema:dateSubmitted
+  - marc:502##$a
 dc:educationLevel:
   - schema:educationalAlignment
+  - marc:521##$a
 dc:extent:
   - dcmes:format
   - schema:description
+  - marc:300##$a
 dc:hasFormat:
   - dcmes:relation
   - schema:associatedMedia
+  - marc:7760#$n
 dc:hasPart:
   - dcmes:relation
   - schema:hasPart
+  - marc:7740#$n
 dc:hasVersion:
   - dcmes:relation
   - schema:associatedMedia
+  - marc:7750#$n
 dc:instructionalMethod:
   - schema:educationalUse
 dc:isFormatOf:
   - dcmes:relation
   - schema:isVariantOf
+  - marc:7760#$n
 dc:isPartOf:
   - dcmes:relation
   - schema:isPartOf
+  - marc:7730#$n
 dc:isReferencedBy:
   - dcmes:relation
   - schema:subjectOf
+  - marc:5100#$a
 dc:isReplacedBy:
   - dcmes:relation
   - schema:predecessorOf
+  - marc:78500$n
 dc:isRequiredBy:
   - dcmes:relation
   - schema:isPartOf
+  - marc:7870#$n
 dc:issued:
   - dcmes:date
   - schema:datePublished
+  - marc:260##$c
 dc:isVersionOf:
   - dcmes:relation
   - schema:isVariantOf
+  - marc:7750#$n
+dc:license:
+  - dcmes:rights
+  - schema:license
+  - marc:540##$a
 dc:mediator:
   - schema:provider
 dc:medium:
   - dcmes:format
   - schema:material
+  - marc:340##$a
 dc:modified:
   - dcmes:date
   - schema:dateModified
+  - marc:046##$j
 dc:provenance:
   - schema:description
+  - marc:561##$a
 dc:references:
   - dcmes:relation
   - schema:mentions
+  - marc:7870#$n
 dc:replaces:
   - dcmes:relation
   - schema:successorOf
+  - marc:78000$n
 dc:requires:
   - dcmes:relation
   - schema:isPartOf
+  - marc:538##$a
 dc:rightsHolder:
   - schema:copyrightHolder
 dc:spatial:
   - dcmes:coverage
   - schema:contentLocation
+  - marc:522##$a
 dc:tableOfContents:
   - dcmes:description
   - schema:description
+  - marc:5050#$a
 dc:temporal:
   - dcmes:coverage
   - schema:contentReferenceTime
+  - marc:513##$b
 dc:valid:
   - dcmes:date
   - schema:expires
+  - marc:046##$m
 
 # Schema.org
 # Classes
@@ -1150,7 +1202,7 @@ schema:gameTip:
 schema:gender:
   - dc:description
 schema:genre:
-  - dc:subject
+  - dc:type
 schema:geo:
   - dc:spatial
 schema:geospatiallyContains:

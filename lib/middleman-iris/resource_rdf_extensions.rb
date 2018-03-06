@@ -204,6 +204,7 @@ module Middleman
             'bf' => 'http://id.loc.gov/ontologies/bibframe/',
             'bflc' => 'http://id.loc.gov/ontologies/bflc/',
             'foaf' => 'http://xmlns.com/foaf/0.1/',
+            'marc' => 'http://www.loc.gov/MARC21/slim',
             'local' => app.extensions[:iris].options[:root_url]
           }
         end

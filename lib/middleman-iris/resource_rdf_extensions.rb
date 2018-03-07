@@ -194,34 +194,38 @@ module Middleman
 
       def to_marc_in_json
         marc_json = {
-          leader: '',
-          fields: []
+          'leader' => ' ' * 24,
+          'fields' => []
         }
         marc = self.to_vocabulary('marc', self.to_vocabulary('dc'))
         marc.each do |k, v|
           field_number = k.split(':').last[0..2]
           ind1 = k.split(':').last[3]
           if !ind1.match(/[0-9]/)
-            ind1 = ''
+            ind1 = ' '
           end
           ind2 = k.split(':').last[4]
           if !ind2.match(/[0-9]/)
-            ind2 = ''
+            ind2 = ' '
           end
           subfield = k.chars.last
-          marc_json[:fields] << {
+          marc_json['fields'] << {
             field_number => {
-              subfields: [
+              'subfields' => [
                 {
-                  subfield => self.class.stringify_nested_property(v)
+                  subfield => self.class.stringify_nested_property(v).to_s
                 }
               ],
-              ind1: ind1,
-              ind2: ind2
+              'ind1' => ind1,
+              'ind2' => ind2
             }
           }
         end
-        binding.pry
+
+        marc_json['fields'] << {
+          '001' => self.uri
+        }
+
         return marc_json
       end
 
@@ -350,7 +354,7 @@ module Middleman
               return v.keys.first
             end
           elsif value.instance_of?(Array) || value.instance_of?(Hashie::Array)
-            return value.first
+            return stringify_nested_property(value.first)
           else
             return value
           end

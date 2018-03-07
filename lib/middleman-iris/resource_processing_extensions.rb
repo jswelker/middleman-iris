@@ -438,6 +438,38 @@ module Middleman
         end
 
 
+        def generate_marc(app)
+          marc_records = []
+          iris_resources(app).select{|r| r.item?}.each do |r|
+            m = MARC::Record.new_from_hash(r.to_marc_in_json)
+            record_length = "%05d" % m.to_marc.length
+            bibliographic_level = if r.collection? then 'c' else 'm' end # c is collection, m is monograph/item
+            base_address = "%05d" % (m.leader.length + (12 * m.fields.length))
+            m.leader = "#{record_length}np#{bibliographic_level}a 22#{base_address}8u 4500" # Leader format: https://www.loc.gov/marc/bibliographic/bdleader.html
+            marc_records << m
+          end
+
+          root = app.sitemap.resources.select{|r| r.site_root?}.first
+          root&.create_metadata_directory
+
+          builder = Nokogiri::XML::Builder.new do |xml|
+            xml.collection('xmlns' => 'http://www.loc.gov/MARC21/slim') do
+              marc_records.each do |r|
+                xml << r.to_xml.to_s
+              end
+            end
+          end
+          File.open("#{root.metadata_directory_path}/index.mrc.xml", 'w'){|f| f.write(builder.to_xml)}
+
+          File.open("#{root.metadata_directory_path}/index.mrc", 'w') do |f|
+            marc_records.each do |m|
+              f.puts m.to_marc + "\r\n\r\n"
+            end
+          end
+
+        end
+
+
         def generate_index(app)
           index = []
           fields = []

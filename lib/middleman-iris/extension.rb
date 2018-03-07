@@ -23,6 +23,7 @@ require 'middleman-iris/cli/generate_index'
 require 'middleman-iris/cli/generate_rss'
 require 'middleman-iris/cli/generate_oai'
 require 'middleman-iris/cli/generate_rdf'
+require 'middleman-iris/cli/generate_marc'
 
 module Middleman
   module Iris
@@ -50,6 +51,8 @@ module Middleman
       option :generate_oai_on_serve, false, 'Whether to generate OAI-PMH Static Repository file on command "middleman serve"'
       option :generate_rdf_on_build, true, 'Whether to generate RDF files on command "middleman build"'
       option :generate_rdf_on_serve, false, 'Whether to generate RDF files on command "middleman serve"'
+      option :generate_marc_on_build, true, 'Whether to generate MARC files on command "middleman build"'
+      option :generate_marc_on_serve, false, 'Whether to generate MARC files on command "middleman serve"'
       option :generate_index_on_build, true, 'Whether to generate search index on command "middleman build"'
       option :generate_index_on_serve, false, 'Whether to generate search index on command "middleman serve"'
       option :root_url, '', 'Root URL to apply to permalinks and URIs'
@@ -127,6 +130,10 @@ module Middleman
           # Generate bib metadata formats
           if (app.build? && ext.options[:generate_rdf_on_build] && app.config[:iris_cli].blank?) || (app.server? && ext.options[:generate_rdf_on_serve])
             ext.generate_rss(app)
+          end
+
+          if (app.build? && ext.options[:generate_marc_on_build] && app.config[:iris_cli].blank?) || (app.server? && ext.options[:generate_marc_on_serve])
+            ext.generate_marc(app)
           end
 
           # Generate RSS

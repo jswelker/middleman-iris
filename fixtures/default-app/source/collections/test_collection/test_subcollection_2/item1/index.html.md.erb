@@ -1,0 +1,97 @@
+---
+layout: display_page
+iris:
+  featured: true
+  permalink: http://purl.org/someuri4
+  templates: [templates/rhetors]
+  rdf_classes: ['schema:Article', 'schema:IndividualProduct']
+  rdf_properties:
+    schema:name: Test Item 1
+    schema:author: {_id: "https://orcid.org/0000-0002-7431-1755", _label: "Welker, Joshua S."}
+    schema:description: This is a test item with many different types of files.
+    schema:copyrightYear: 2018
+    schema:datePublished: 2018-01-24
+    schema:caption:
+      _id: abc123
+      schema:name: some caption
+      schema:creator: some person
+      schema:contributor:
+        _id: xyz123
+        schema:name: Josh Welker
+        schema:keywords:
+          - horses
+          - cows
+    schema:keywords: [
+      { _id: "http://id.loc.gov/authorities/subjects/sh99001674.html", _label: "Juvenile Literature"},
+      { _id: "http://id.loc.gov/authorities/subjects/sh2009003623.html", _label: "Children's literature--Appreciation--United States"}
+    ]
+    schema:sku: PZ7.F598295
+    schema:weight: 1200 g
+    schema:width: 20 cm
+    schema:height: 30 cm
+    nestedProperty:
+      _id: myid
+      _type: schema:something
+      prop1: hi
+      prop2: [1, 2, 3]
+      prop3:
+        prop3a: very nested
+        prop3b:
+          prop3ba: very very nested
+          prop3bb:
+            - stupidly
+            - deeply
+            - nested
+
+    normalProperty: something
+  children:
+    some_excel_sheets.xlsx:
+      indexing:
+        file_text: 50%
+        properties: ['schema:name', 'schema:description']
+      rdf_properties:
+        schema:name: An Important Spreadsheet
+        schema:description: This is some spreadsheet.
+    some_jpeg_image.jpg:
+      indexing:
+        file_text: 0
+      rdf_properties:
+        schema:description: This is some JPEG file.
+    some_page.html.erb.md:
+      indexing:
+        file_text: 100%
+      rdf_properties:
+        schema:description: This is some HTML page.
+    some_pdf.pdf:
+      indexing:
+        file_text: 200
+      rdf_properties:
+        schema:description: This is some PDF file.
+    some_png_image.png:
+      indexing:
+        file_text: 0
+      rdf_properties:
+        schema:description: This is some PNG file.
+    some_powerpoint.pptx:
+      indexing:
+        file_text: 50
+      rdf_properties:
+        schema:description: This is some powerpoint file.
+    some_textfile.txt:
+      indexing:
+        file_text: 0
+      rdf_properties:
+        schema:description: This is some text file.
+    some_tiff_image.tif:
+      indexing:
+        file_text: 0
+      rdf_properties:
+        schema:description: This is some tiff file.
+    some_word_doc.docx:
+      indexing:
+        file_text: 0%
+      rdf_properties:
+        schema:description: This is some word file.
+---
+
+This is a test page showing many different resource types indexed in different ways.

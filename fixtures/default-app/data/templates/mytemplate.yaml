@@ -1,0 +1,4 @@
+template_property: this is a value
+iris:
+  rdf_properties:
+    schema:name: this is a name from a template file

@@ -12,20 +12,59 @@ module Middleman
 
 
       def load_metadata
-        front_matter = self.data
+        # Find merge rules
+        merge_rules = {
+          templates: 'overwrite',
+          parent: 'overwrite',
+          file: 'overwrite',
+          front_matter: 'overwrite'
+        }
+
+        data_sources = {
+          templates: self.metadata_from_templates,
+          parent: self.metadata_from_parent,
+          file: self.metadata_from_file,
+          front_matter: self.page_data
+        }
+
+        data_sources.each do |source_name, source|
+          merge_rules.each do |k, v|
+            source_rule = source.dig('iris', 'inheritance', k.to_s)
+            merge_rules[k] = source_rule if source_rule.present?
+          end
+        end
+
+        # Merge data sources
         complete_metadata = self.default_rdf_properties
-        complete_metadata.deep_merge!(metadata_from_templates){|k, v1, v2| [v1].flatten + [v2].flatten}
-        complete_metadata.deep_merge!(metadata_from_parent){|k, v1, v2| [v1].flatten + [v2].flatten}
-        complete_metadata.deep_merge!(metadata_from_file){|k, v1, v2| [v1].flatten + [v2].flatten}
-        complete_metadata.deep_merge!(front_matter){|k, v1, v2| [v1].flatten + [v2].flatten}
-        complete_metametadata ||= Middleman::Util.recursively_enhance({})
+        data_sources.each do |source_name, source|
+          if merge_rules[source_name] == 'overwrite'
+            complete_metadata.deep_merge!(source)
+          elsif merge_rules[source_name] == 'merge'
+            complete_metadata.deep_merge!(source) do |k, v1, v2|
+              if %w(iris rdf_properties).include?(k)
+                v1
+              else
+                array = ([v2].flatten + [v1].flatten).uniq.compact
+                if array.length == 1
+                  array.first
+                elsif array.blank?
+                  nil
+                else
+                  array
+                end
+              end
+            end
+          end
+        end
+        complete_metadata ||= Middleman::Util.recursively_enhance({})
+
         self.page_data = complete_metadata
         return complete_metadata
       end
 
 
       def metadata_from_parent
-        return self.parent&.iris_value(['children', filename]) || Middleman::Util.recursively_enhance({})
+        return {'iris' => (self.parent&.iris_value(['children', filename]) || Middleman::Util.recursively_enhance({}))}
       end
 
 
@@ -242,8 +281,8 @@ module Middleman
             'bf' => 'http://id.loc.gov/ontologies/bibframe/',
             'bflc' => 'http://id.loc.gov/ontologies/bflc/',
             'foaf' => 'http://xmlns.com/foaf/0.1/',
-            'marc' => 'http://www.loc.gov/MARC21/slim',
-            'local' => app.extensions[:iris].options[:root_url]
+            'marc' => 'http://www.loc.gov/MARC21/slim#',
+            'local' => "#{app.extensions[:iris].options[:root_url]}/ontology/"
           }
         end
 
@@ -254,7 +293,7 @@ module Middleman
             '_type' => '@type',
             '_value' => '@value',
             '_label' => 'http://www.w3.org/2000/01/rdf-schema#label',
-            '@vocab' => app.extensions[:iris].options[:root_url]
+            '@vocab' => "#{app.extensions[:iris].options[:root_url]}/ontology/"
           }.merge(vocabularies(app))
         end
 

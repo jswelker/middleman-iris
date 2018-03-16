@@ -1,0 +1,9 @@
+{
+  'file_property': 'this is a value',
+  'iris': {
+    'rdf_properties': {
+      'schema:author': 'this is an author from a metadata file',
+      'schema:sku': 'this is a sku from a metadata file'
+    }
+  }
+}

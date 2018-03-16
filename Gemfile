@@ -7,6 +7,7 @@ group :development do
   gem 'rake'
   gem 'rdoc'
   gem 'yard'
+  gem 'pry'
 end
 
 group :test do
@@ -14,4 +15,5 @@ group :test do
   gem 'cucumber'
   gem 'aruba'
   gem 'rspec'
+  gem 'pry'
 end

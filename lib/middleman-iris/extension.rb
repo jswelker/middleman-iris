@@ -35,6 +35,7 @@ module Middleman
       include Iris::ResourceValidatorExtensions::SingletonMethods
 
       attr_accessor :metadata_mappings
+      attr_accessor :metadata_rankings
 
       expose_to_template :sort_resources, :collections, :specific_resources, :root_collections,
       :recursive_unpack_structure_to_rdfa
@@ -55,18 +56,20 @@ module Middleman
       option :generate_marc_on_serve, false, 'Whether to generate MARC files on command "middleman serve"'
       option :generate_index_on_build, true, 'Whether to generate search index on command "middleman build"'
       option :generate_index_on_serve, false, 'Whether to generate search index on command "middleman serve"'
-      option :root_url, '', 'Root URL to apply to permalinks and URIs'
+      option :root_url, 'http://localhost:4567', 'Root URL to apply to permalinks and URIs'
       option :organization_name, '', 'Name of the organization that owns this website'
       option :site_name, '', 'Name of this website'
       option :admin_email, '', 'Email address(es)'
       option :default_language_code, 'en_US', 'Default language code for documents on this website'
       option :collections_dir, 'collections', 'Name of the root directory where collections live.'
       option :filenames_to_ignore, %w(.keep), 'Names of files to ignore.'
+      option :directories_to_skip, %w(.raw .originals .permissions .administrative .copyright), 'Directories within an item that will not be included in the built website for end users.'
       option :libreoffice_dir, nil, 'Where to find the LibreOffice executable for converting office files to PDF'
       option :html_text_indexing_selector, nil, 'CSS selector for indexing text of HTML pages on this site'
       option :default_rdf_values, {}, 'Default RDF values to apply to all documents'
       option :oai_static_repository_gateway_url, '', 'URL of OAI-PMH Static Repository Gateway that provides access to this site\'s OAI-PMH Static Repository file'
       option :custom_metadata_mappings_file, nil, 'Path from root dir to custom file for metadata crosswalk mappings (YAML or JSON)'
+      option :custom_metadata_rankings_file, nil, 'Path from root dir to custom file for metadata field type rankings (YAML or JSON)'
       option :index_default_properties, %w(schema:name schema:description schema:author schema:keywords schema:copyrightYear bf:title bf:contribution bf:subject), 'Default properties indexed for each resource.'
       option :index_default_file_text, '100%', 'Default amount of text indexed for each file. Either a percent of number of total characters'
       option :index_field_weights, {
@@ -102,14 +105,21 @@ module Middleman
         ext = self
 
         app.ready do
-          ext.ignore_resources(app.sitemap.resources)
-          ext.load_metadata_from_files(app.sitemap.resources)
 
           if ext.options[:custom_metadata_mappings_file].present?
             ext.metadata_mappings = YAML.load_file("#{root_path}/#{ext.options[:custom_metadata_mappings_file]}")
           else
-            ext.metadata_mappings = YAML.load_file("#{Gem.datadir('middleman-iris')}/metadata_mappings.yaml")
+            ext.metadata_mappings = YAML.load_file("#{File.expand_path('../../../data', __FILE__)}/metadata_mappings.yaml")
           end
+
+          if ext.options[:custom_metadata_rankings_file].present?
+            ext.metadata_rankings = YAML.load_file("#{root_path}/#{ext.options[:custom_metadata_rankings_file]}")
+          else
+            ext.metadata_rankings = YAML.load_file("#{File.expand_path('../../../data', __FILE__)}/metadata_rankings.yaml")
+          end
+
+          ext.ignore_resources(app.sitemap.resources)
+          ext.load_metadata_from_files(app.sitemap.resources)
 
           if (app.build? && ext.options[:generate_history_on_build] && app.config[:iris_cli].blank?) || (app.server? && ext.options[:generate_history_on_serve])
             ext.generate_history(app.sitemap.resources)

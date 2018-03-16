@@ -3,12 +3,23 @@ Bundler::GemHelper.install_tasks
 
 require 'cucumber/rake/task'
 
-Cucumber::Rake::Task.new(:cucumber, 'Run features that should pass') do |t|
-  t.cucumber_opts = '--color --strict'
+require 'middleman-core'
+
+Cucumber::Rake::Task.new( :cucumber, 'Run features that should pass' ) do | t |
+  ENV[ "TEST" ] = "true"
+  t.cucumber_opts = "--color --strict --format #{ ENV[ 'CUCUMBER_FORMAT' ] || 'pretty' }"
 end
 
 require 'rake/clean'
 
-task test: ['cucumber']
+desc "Run tests, both RSpec and Cucumber"
+task test: [ :spec, :cucumber ]
 
-task default: :test
+require 'rspec/core/rake_task'
+
+desc "Run RSpec"
+
+RSpec::Core::RakeTask.new do | spec |
+  spec.pattern    = 'spec/**/*_spec.rb'
+  spec.rspec_opts = [ '--color', '--format documentation' ]
+end

@@ -1,0 +1,150 @@
+<?xml version="1.0"?>
+<Repository xmlns="http://www.openarchives.org/OAI/2.0/static-repository" xmlns:oai="http://www.openarchives.org/OAI/2.0/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/static-repository http://www.openarchives.org/OAI/2.0/static-repository.xsd">
+  <Identify>
+    <oai:repositoryName/>
+    <oai:baseUrl/>
+    <oai:protocolVersion>2.0</oai:protocolVersion>
+    <oai:earliestDatestamp>2018-03-12 16:10:19 -0500</oai:earliestDatestamp>
+    <oai:granularity>YYYY-MM-DDThh:mm:ssZ</oai:granularity>
+  </Identify>
+  <ListMetadataFormats>
+    <oai:metadataPrefix>oai_dc</oai:metadataPrefix>
+    <oai:schema>http://www.openarchives.org/OAI/2.0/oai_dc.xsd</oai:schema>
+    <oai:metadataNamespace>http://www.openarchives.org/OAI/2.0/oai_dc/</oai:metadataNamespace>
+  </ListMetadataFormats>
+  <ListRecords metadataPrefix="oai_dc">
+    <oai:record>
+      <oai:header>
+        <oai:identifier>http://purl.org/someuri</oai:identifier>
+        <oai:datestamp>2018-03-13T11:03:43-05:00</oai:datestamp>
+      </oai:header>
+      <oai:metadata>
+        <oai:dc xmlns:oai_dc="http://www.openarchives.org/OAI/2.0/oai_dc/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:schemaLocation="http://www.openarchives.org/OAI/2.0/oai_dc/ http://www.openarchives.org/OAI/2.0/oai_dc.xsd">
+          <dc:title>Test Item 1</dc:title>
+          <dc:title>this is a name from a template file</dc:title>
+          <dc:description>This is a test item with many different types of files.</dc:description>
+          <dc:description>3726c8619cef4b9cd85a1553b16d5bf4562f28f5c092ad7ce92543481801840b (SHA256)</dc:description>
+          <dc:description>some caption</dc:description>
+          <dc:identifier>http://purl.org/someuri</dc:identifier>
+          <dc:identifier>PZ7.F598295</dc:identifier>
+          <dc:date>2018-03-13 11:03:43 -0500</dc:date>
+          <dc:date>2018-01-24</dc:date>
+          <dc:date>2018</dc:date>
+          <dc:language>en_US</dc:language>
+          <dc:relation>some_audio.mp3</dc:relation>
+          <dc:relation>some_excel_sheets.xlsx</dc:relation>
+          <dc:relation>some_jpeg_image.jpg</dc:relation>
+          <dc:relation>Just Some Random Page</dc:relation>
+          <dc:relation>some_pdf.pdf</dc:relation>
+          <dc:relation>some_png_image.png</dc:relation>
+          <dc:relation>some_powerpoint.pptx</dc:relation>
+          <dc:relation>some_textfile.txt</dc:relation>
+          <dc:relation>some_tiff_image.tif</dc:relation>
+          <dc:relation>some_video.mp4</dc:relation>
+          <dc:relation>some_word_doc.docx</dc:relation>
+          <dc:relation>An Important Spreadsheet</dc:relation>
+          <dc:creator>Welker, Joshua S.</dc:creator>
+          <dc:creator>this is an author from a metadata file</dc:creator>
+          <dc:subject>Juvenile Literature</dc:subject>
+          <dc:subject>Children's literature--Appreciation--United States</dc:subject>
+        </oai:dc>
+      </oai:metadata>
+    </oai:record>
+    <oai:record>
+      <oai:header>
+        <oai:identifier>http://purl.org/someuri2</oai:identifier>
+        <oai:datestamp>2018-03-16T09:36:56-05:00</oai:datestamp>
+      </oai:header>
+      <oai:metadata>
+        <oai:dc xmlns:oai_dc="http://www.openarchives.org/OAI/2.0/oai_dc/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:schemaLocation="http://www.openarchives.org/OAI/2.0/oai_dc/ http://www.openarchives.org/OAI/2.0/oai_dc.xsd">
+          <dc:title>Test Item 2</dc:title>
+          <dc:description>This is a test item with many different types of files.</dc:description>
+          <dc:description>eb0b71f17ef3ada2911a3470a3d032dbe5972980e32ae5ddf86ac4b38d210ce1 (SHA256)</dc:description>
+          <dc:description>some caption</dc:description>
+          <dc:identifier>http://purl.org/someuri2</dc:identifier>
+          <dc:identifier>PZ7.F598295</dc:identifier>
+          <dc:date>2018-03-16 09:23:30 -0500</dc:date>
+          <dc:date>2018-01-24</dc:date>
+          <dc:date>2018</dc:date>
+          <dc:language>en_US</dc:language>
+          <dc:relation>some_excel_sheets.xlsx</dc:relation>
+          <dc:relation>some_jpeg_image.jpg</dc:relation>
+          <dc:relation>Just Some Random Page</dc:relation>
+          <dc:relation>some_pdf.pdf</dc:relation>
+          <dc:relation>some_png_image.png</dc:relation>
+          <dc:relation>some_powerpoint.pptx</dc:relation>
+          <dc:relation>some_textfile.txt</dc:relation>
+          <dc:relation>some_tiff_image.tif</dc:relation>
+          <dc:relation>some_word_doc.docx</dc:relation>
+          <dc:creator>Welker, Joshua S.</dc:creator>
+          <dc:subject>Juvenile Literature</dc:subject>
+          <dc:subject>Children's literature--Appreciation--United States</dc:subject>
+        </oai:dc>
+      </oai:metadata>
+    </oai:record>
+    <oai:record>
+      <oai:header>
+        <oai:identifier>http://purl.org/someuri3</oai:identifier>
+        <oai:datestamp>2018-03-13T11:03:44-05:00</oai:datestamp>
+      </oai:header>
+      <oai:metadata>
+        <oai:dc xmlns:oai_dc="http://www.openarchives.org/OAI/2.0/oai_dc/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:schemaLocation="http://www.openarchives.org/OAI/2.0/oai_dc/ http://www.openarchives.org/OAI/2.0/oai_dc.xsd">
+          <dc:title>Test Item 1</dc:title>
+          <dc:description>This is a test item with many different types of files.</dc:description>
+          <dc:description>68be780aa3e71f89ca6e9ac52c56caedd011d2c4eb51bc0feb5f431c17217c44 (SHA256)</dc:description>
+          <dc:description>some caption</dc:description>
+          <dc:identifier>http://purl.org/someuri3</dc:identifier>
+          <dc:identifier>PZ7.F598295</dc:identifier>
+          <dc:date>2018-03-13 11:03:44 -0500</dc:date>
+          <dc:date>2018-01-24</dc:date>
+          <dc:date>2018</dc:date>
+          <dc:language>en_US</dc:language>
+          <dc:relation>some_excel_sheets.xlsx</dc:relation>
+          <dc:relation>some_jpeg_image.jpg</dc:relation>
+          <dc:relation>Just Some Random Page</dc:relation>
+          <dc:relation>some_pdf.pdf</dc:relation>
+          <dc:relation>some_png_image.png</dc:relation>
+          <dc:relation>some_powerpoint.pptx</dc:relation>
+          <dc:relation>some_textfile.txt</dc:relation>
+          <dc:relation>some_tiff_image.tif</dc:relation>
+          <dc:relation>some_word_doc.docx</dc:relation>
+          <dc:creator>Welker, Joshua S.</dc:creator>
+          <dc:subject>Juvenile Literature</dc:subject>
+          <dc:subject>Children's literature--Appreciation--United States</dc:subject>
+        </oai:dc>
+      </oai:metadata>
+    </oai:record>
+    <oai:record>
+      <oai:header>
+        <oai:identifier>http://purl.org/someuri4</oai:identifier>
+        <oai:datestamp>2018-03-13T11:03:44-05:00</oai:datestamp>
+      </oai:header>
+      <oai:metadata>
+        <oai:dc xmlns:oai_dc="http://www.openarchives.org/OAI/2.0/oai_dc/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:schemaLocation="http://www.openarchives.org/OAI/2.0/oai_dc/ http://www.openarchives.org/OAI/2.0/oai_dc.xsd">
+          <dc:title>Test Item 1</dc:title>
+          <dc:description>This is a test item with many different types of files.</dc:description>
+          <dc:description>35ed51850894816c73ae8f32f08cfc64d4226275842ab4e66c4ee019aff8ae16 (SHA256)</dc:description>
+          <dc:description>some caption</dc:description>
+          <dc:identifier>http://purl.org/someuri4</dc:identifier>
+          <dc:identifier>PZ7.F598295</dc:identifier>
+          <dc:date>2018-03-13 11:03:44 -0500</dc:date>
+          <dc:date>2018-01-24</dc:date>
+          <dc:date>2018</dc:date>
+          <dc:language>en_US</dc:language>
+          <dc:relation>some_excel_sheets.xlsx</dc:relation>
+          <dc:relation>some_jpeg_image.jpg</dc:relation>
+          <dc:relation>Just Some Random Page</dc:relation>
+          <dc:relation>some_pdf.pdf</dc:relation>
+          <dc:relation>some_png_image.png</dc:relation>
+          <dc:relation>some_powerpoint.pptx</dc:relation>
+          <dc:relation>some_textfile.txt</dc:relation>
+          <dc:relation>some_tiff_image.tif</dc:relation>
+          <dc:relation>some_word_doc.docx</dc:relation>
+          <dc:creator>Welker, Joshua S.</dc:creator>
+          <dc:subject>Juvenile Literature</dc:subject>
+          <dc:subject>Children's literature--Appreciation--United States</dc:subject>
+        </oai:dc>
+      </oai:metadata>
+    </oai:record>
+  </ListRecords>
+</Repository>

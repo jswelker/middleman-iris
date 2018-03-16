@@ -1,10 +1,15 @@
 ---
-layout: display_page
+layout: page
 iris:
   featured: true
   permalink: http://purl.org/someuri
-  templates: [templates/rhetors]
+  templates: [templates/mytemplate]
   rdf_classes: ['schema:Article', 'schema:IndividualProduct']
+  inheritance:
+    front_matter: merge
+    file: merge
+    parent: merge
+    templates: merge
   rdf_properties:
     schema:name: Test Item 1
     schema:author: {_id: "https://orcid.org/0000-0002-7431-1755", _label: "Welker, Joshua S."}
@@ -63,6 +68,8 @@ iris:
       rdf_properties:
         schema:description: This is some HTML page.
     some_pdf.pdf:
+      position: 1
+      templates: [templates/mytemplate]
       indexing:
         file_text: 200
       rdf_properties:

@@ -1,0 +1,16 @@
+---
+title: Home Page
+---
+## Collections
+
+<ul>
+<% app.sitemap.resources.select{|r| r.collection?}.each do |r| %>
+  <li>Collection: <%= r.best_title %> (<%= r.page_id %>)</li>
+<% end %>
+</ul>
+
+## All Resources
+<% app.sitemap.resources.each do |r| %>
+  <li>Resource: <%= r.best_title %> (<%= r.page_id %>)</li>
+<% end %>
+</ul>

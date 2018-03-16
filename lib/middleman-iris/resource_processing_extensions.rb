@@ -43,6 +43,12 @@ module Middleman
           }
           create_metadata_directory
           File.open(file_history_path, 'w'){|f| f.write history.to_yaml}
+          if File.exist?(self.thumbnail_path)
+            FileUtils.rm(self.thumbnail_path)
+          end
+          if File.exist?(self.text_file_path)
+            FileUtils.rm(self.text_file_path)
+          end
         end
       end
 
@@ -71,59 +77,56 @@ module Middleman
 
 
       def rip_text_to_file
-        return nil if !in_collections_dir? || self.ignored?
+        return nil if !self.in_collections_dir? || self.ignored?
 
         text = nil
 
         # First see if text file exists and if file checksum is the same
         create_metadata_directory
-        if File.exist?(text_file_path) && (self.current_checksum == self.last_checksum)
-          text = File.read(text_file_path)
+        return nil if File.exist?(text_file_path)
 
         # Otherwise, rip text and save it before returning
-        else
-          if page?
-            # Rip rendered HTML page content using Nokogiri
-            doc = Nokogiri::HTML(self.render)
-            text = doc.css(@app.extensions[:iris].options[:html_text_indexing_selector]).text
-            File.open(text_file_path, 'w'){|f| f.write text}
-          elsif pdf?
-            # Rip PDF text using pdf-reader library
-            reader = PDF::Reader.new(self.source_file)
-            page_text = []
-            reader.pages.each do |page|
-              page_text << page.text
-            end
-            text = page_text.join("\n")
-            File.open(text_file_path, 'w'){|f| f.write text}
-          elsif word_doc? && Dir.exists?(@app.extensions[:iris].options[:libreoffice_dir])
-            # Rip Office documents using LibreOffice CLI convert tool
-            system("\"#{@app.extensions[:iris].options[:libreoffice_dir]}/soffice.exe\" --headless --convert-to txt \"#{self.source_file}\" --outdir \"#{metadata_directory_path}\"")
-            system("mv \"#{text_file_path.gsub(self.ext, '')}\" \"#{text_file_path}\"")
-          elsif spreadsheet? && Dir.exists?(@app.extensions[:iris].options[:libreoffice_dir])
-            # Rip spreadsheets using the Roo library
-            workbook = Roo::Spreadsheet.open(self.source_file)
-            text = ''
-            workbook.sheets.each do |sheet_name|
-              text += workbook.sheet(sheet_name).to_csv
-            end
-            File.open(text_file_path, 'w'){|f| f.write text}
-          elsif powerpoint? && Dir.exists?(@app.extensions[:iris].options[:libreoffice_dir])
-            # Rip Powerpoint files to PDF using LibreOffice CLI and then from PDF to txt using pdf-reader library
-            system("\"#{@app.extensions[:iris].options[:libreoffice_dir]}/soffice.exe\" --headless --convert-to pdf \"#{self.source_file}\" --outdir \"#{metadata_directory_path}\"")
-            pdf_path = text_file_path.gsub(self.ext+'.txt', '.pdf')
-            reader = PDF::Reader.new(pdf_path)
-            page_text = []
-            reader.pages.each do |page|
-              page_text << page.text
-            end
-            text = page_text.join("\n")
-            File.open(text_file_path, 'w'){|f| f.write text}
-            File.delete(pdf_path)
-          elsif textfile?
-            # Copy plain text files
-            FileUtils.cp(self.source_file, text_file_path)
+        if self.page?
+          # Rip rendered HTML page content using Nokogiri
+          doc = Nokogiri::HTML(self.render)
+          text = doc.css(@app.extensions[:iris].options[:html_text_indexing_selector]).text
+          File.open(text_file_path, 'w'){|f| f.write text}
+        elsif self.pdf?
+          # Rip PDF text using pdf-reader library
+          reader = PDF::Reader.new(self.source_file)
+          page_text = []
+          reader.pages.each do |page|
+            page_text << page.text
           end
+          text = page_text.join("\n")
+          File.open(text_file_path, 'w'){|f| f.write text}
+        elsif self.word_doc? && Dir.exists?(@app.extensions[:iris].options[:libreoffice_dir].to_s)
+          # Rip Office documents using LibreOffice CLI convert tool
+          system("\"#{@app.extensions[:iris].options[:libreoffice_dir]}/soffice.exe\" --headless --convert-to txt \"#{self.source_file}\" --outdir \"#{metadata_directory_path}\"")
+          system("mv \"#{text_file_path.gsub(self.ext, '')}\" \"#{text_file_path}\"")
+        elsif self.spreadsheet? && Dir.exists?(@app.extensions[:iris].options[:libreoffice_dir].to_s)
+          # Rip spreadsheets using the Roo library
+          workbook = Roo::Spreadsheet.open(self.source_file)
+          text = ''
+          workbook.sheets.each do |sheet_name|
+            text += workbook.sheet(sheet_name).to_csv
+          end
+          File.open(text_file_path, 'w'){|f| f.write text}
+        elsif self.powerpoint? && Dir.exists?(@app.extensions[:iris].options[:libreoffice_dir].to_s)
+          # Rip Powerpoint files to PDF using LibreOffice CLI and then from PDF to txt using pdf-reader library
+          system("\"#{@app.extensions[:iris].options[:libreoffice_dir]}/soffice.exe\" --headless --convert-to pdf \"#{self.source_file}\" --outdir \"#{metadata_directory_path}\"")
+          pdf_path = text_file_path.gsub(self.ext+'.txt', '.pdf')
+          reader = PDF::Reader.new(pdf_path)
+          page_text = []
+          reader.pages.each do |page|
+            page_text << page.text
+          end
+          text = page_text.join("\n")
+          File.open(text_file_path, 'w'){|f| f.write text}
+          File.delete(pdf_path)
+        elsif self.textfile?
+          # Copy plain text files
+          FileUtils.cp(self.source_file, text_file_path)
         end
 
       end
@@ -156,7 +159,7 @@ module Middleman
 
 
       def child_thumbnail_url
-        self.children.select{|child| child.thumbnail?}.first.thumbnail_url
+        self.children.select{|child| child.thumbnail?}.first&.thumbnail_url
       end
 
 
@@ -182,7 +185,7 @@ module Middleman
           first_page.destroy!
         end
 
-        if self.powerpoint? || self.word_doc? || self.spreadsheet?
+        if (self.powerpoint? || self.word_doc? || self.spreadsheet?)  && Dir.exists?(@app.extensions[:iris].options[:libreoffice_dir].to_s)
           system("\"#{@app.extensions[:iris].options[:libreoffice_dir]}/soffice.exe\" --convert-to pdf --outdir \"#{self.dirname}\" \"#{self.source_file}\"")
           sleep(1)
           pdf_file = self.source_file.gsub(self.ext, '') + '.pdf'
@@ -248,13 +251,14 @@ module Middleman
             next if r.instance_of?(Middleman::Sitemap::Extensions::RedirectResource)
 
             # Ignore if YAML front matter indicates so
-            if r.parent&.iris_value('ignore_children') || r.data['ignored']
-              r.ignore!
-            end
+            r.ignore! if r.parent&.iris_value('ignore_children') || r.iris_value('ignored') || r.data['ignored']
+
             # Ignore if this filename is designated to ignore in iris options
-            if (options[:filenames_to_ignore] || []).include?(File.basename(r.source_file))
-              r.ignore!
-            end
+            r.ignore! if (options[:filenames_to_ignore] || []).include?(File.basename(r.source_file))
+
+            # Ignore directories indicated by options[:directories_to_skip]
+            r.ignore! if (options[:directories_to_skip] || []).include?(r.dirname_last)
+
           end
         end
 
@@ -283,7 +287,7 @@ module Middleman
           puts 'Generating file text for indexing...'
           resources.each do |r|
             next if r.ignored? || !r.in_collections_dir? || r.instance_of?(Middleman::Sitemap::Extensions::RedirectResource) || r.in_metadata_dir?
-            r.rip_text_to_file(force_regenerate)
+            r.rip_text_to_file
           end
         end
 
@@ -315,7 +319,7 @@ module Middleman
             end
           end
 
-          root = app.sitemap.resources.select{|r| r.site_root?}.first
+          root = site_root(app)
           root&.create_metadata_directory
 
           filename = "#{root.metadata_directory_path}/index.atom"
@@ -325,8 +329,7 @@ module Middleman
 
 
         def rss_url(app)
-          root = app.sitemap.resources.select{|r| r.site_root?}.first
-          return "#{root.permalink}.metadata/index.atom"
+          return "#{site_root(app).permalink}.metadata/index.atom"
         end
 
 
@@ -394,7 +397,7 @@ module Middleman
             end
           end
 
-          root = app.sitemap.resources.select{|r| r.site_root?}.first
+          root = site_root(app)
           root&.create_metadata_directory
           filename = "#{root.metadata_directory_path}/oai-pmh.xml"
           File.open(filename, 'w'){|f| f.write(builder.to_xml)}
@@ -403,10 +406,7 @@ module Middleman
 
 
         def oai_url(app)
-          def rss_url(app)
-            root = app.sitemap.resources.select{|r| r.site_root?}.first
-            return "#{root.permalink}.metadata/oai-pmh.xml"
-          end
+          return "#{site_root(app).permalink}.metadata/oai-pmh.xml"
         end
 
 
@@ -418,23 +418,20 @@ module Middleman
           }
           graph = RDF::Graph.new << JSON::LD::API.toRdf(jsonld)
           ttl = graph.dump(:ttl, prefixes: vocabularies(app))
-          rdfxml = graph.dump(:rdfxml, prefixes: vocabularies(app))
           ntriples = graph.dump(:ntriples, prefixes: vocabularies(app))
 
-          root = app.sitemap.resources.select{|r| r.site_root?}.first
+          root = site_root(app)
           root&.create_metadata_directory
 
-          File.open("#{root.metadata_directory_path}/index.jsonld", 'w'){|f| f.write(jsonld)}
+          File.open("#{root.metadata_directory_path}/index.jsonld", 'w'){|f| f.write(jsonld.to_json)}
           File.open("#{root.metadata_directory_path}/index.ttl", 'w'){|f| f.write(ttl)}
-          File.open("#{root.metadata_directory_path}/index.rdf", 'w'){|f| f.write(rdfxml)}
           File.open("#{root.metadata_directory_path}/index.nt", 'w'){|f| f.write(ntriples)}
 
         end
 
 
         def rdf_url(app, ext)
-          root = app.sitemap.resources.select{|r| r.site_root?}.first
-          return "#{root.permalink}.metadata/index.#{ext}"
+          return "#{site_root(app).permalink}.metadata/index.#{ext}"
         end
 
 
@@ -449,7 +446,7 @@ module Middleman
             marc_records << m
           end
 
-          root = app.sitemap.resources.select{|r| r.site_root?}.first
+          root = site_root(app)
           root&.create_metadata_directory
 
           builder = Nokogiri::XML::Builder.new do |xml|
@@ -509,36 +506,30 @@ module Middleman
                 tx: child.index_text,
                 i: child.icon
               }.merge(child_rdf_properties)
-
             end
-
             doc.delete_if{|k,v| v.blank?}
-            doc[:ch]&.delete_if{|k,v| v.blank?}
+            doc[:ch]&.delete_if{|v| v.blank?}
             index << doc
             fields += (doc[:ch]&.map{|child| child.keys} || [])
             fields += r.files_in_same_directory.map{|child| child.rdf_properties.select{|k, v| r.best_index_rules[:properties].include?(k)}.keys}
           end
-
-          root = app.sitemap.resources.select{|r| r.site_root?}.first
+          root = site_root(app)
           root&.create_metadata_directory
 
           condensed_index = index.to_json
-
           tokens = {
-            '@u@' => app.extensions[:iris].options[:root_url],
+            '@u@' => app.extensions[:iris].options[:root_url] || '$URL$',
           }
           fields.flatten.uniq.select{|field| field.present?}.each_with_index do |field, i|
             tokens["@#{i}@"] = field
           end
           tokens.each do |k,v|
-            condensed_index.gsub!(v.to_s, k)
+            condensed_index.gsub!("\"#{v.to_s}\"", "\"#{k}\"")
           end
-
           json = {
             tokens: tokens,
             docs: JSON.parse(condensed_index)
           }.to_json
-
           filename = "#{root.metadata_directory_path}/index.json"
           File.open(filename, 'w'){|f| f.write(json)}
           puts "Index file is #{file_size(filename)} at #{filename}"
@@ -547,8 +538,7 @@ module Middleman
 
 
         def search_index_url(app)
-          root = app.sitemap.resources.select{|r| r.site_root?}.first
-          return "#{root.permalink}.metadata/index.json"
+          return "#{site_root(app).permalink}.metadata/index.json"
         end
 
 

@@ -1,0 +1,239 @@
+<http://purl.org/someuri2#just_some_random_page> <http://www.w3.org/2000/01/rdf-schema#label> "Just Some Random Page" .
+<http://purl.org/someuri2#some_pdf.pdf> <http://www.w3.org/2000/01/rdf-schema#label> "some_pdf.pdf" .
+<http://purl.org/someuri#just_some_random_page> <http://www.w3.org/2000/01/rdf-schema#label> "Just Some Random Page" .
+<http://localhost:4567/collections/test_collection/> <http://schema.org/description> "A test collection" .
+<http://localhost:4567/collections/test_collection/> <http://schema.org/url> "http://localhost:4567/collections/test_collection/" .
+<http://localhost:4567/collections/test_collection/> <http://schema.org/dateModified> "11:03:43-05:00"^^<http://www.w3.org/2001/XMLSchema#time> .
+<http://localhost:4567/collections/test_collection/> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://schema.org/WebPage> .
+<http://localhost:4567/collections/test_collection/> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://schema.org/IndividualProduct> .
+<http://localhost:4567/collections/test_collection/> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://schema.org/CollectionPage> .
+<http://localhost:4567/collections/test_collection/> <http://schema.org/provider> "" .
+<http://localhost:4567/collections/test_collection/> <http://schema.org/name> "Test Collection" .
+<http://localhost:4567/collections/test_collection/> <http://schema.org/inLanguage> "en_US" .
+<http://localhost:4567/collections/test_collection/> <http://schema.org/disambiguatingDescription> "081ebe9f356d4b53d270b4ee242b363d6ebe70de0188e172791915366911c337 (SHA256)" .
+<http://localhost:4567/collections/test_collection/> <http://schema.org/hasPart> <http://localhost:4567/collections/test_collection/test_subcollection_1/> .
+<http://localhost:4567/collections/test_collection/> <http://schema.org/hasPart> <http://localhost:4567/collections/test_collection#ignore_me> .
+<http://localhost:4567/collections/test_collection/> <http://schema.org/hasPart> <http://purl.org/someuri2> .
+<http://localhost:4567/collections/test_collection/> <http://schema.org/hasPart> <http://purl.org/someuri> .
+<http://localhost:4567/collections/test_collection/> <http://schema.org/hasPart> <http://localhost:4567/collections/test_collection/test_subcollection_2/> .
+<http://localhost:4567/collections/test_collection/> <http://schema.org/identifier> "http://localhost:4567/collections/test_collection/" .
+<http://localhost:4567/collections/test_collection/> <http://schema.org/datePublished> "16:10:18-05:00"^^<http://www.w3.org/2001/XMLSchema#time> .
+<http://purl.org/someuri#some_audio.mp3> <http://www.w3.org/2000/01/rdf-schema#label> "some_audio.mp3" .
+<http://purl.org/someuri#some_powerpoint.pptx> <http://www.w3.org/2000/01/rdf-schema#label> "some_powerpoint.pptx" .
+<http://purl.org/someuri2#some_png_image.png> <http://www.w3.org/2000/01/rdf-schema#label> "some_png_image.png" .
+<http://purl.org/someuri2#some_excel_sheets.xlsx> <http://www.w3.org/2000/01/rdf-schema#label> "some_excel_sheets.xlsx" .
+<http://purl.org/someuri#some_jpeg_image.jpg> <http://www.w3.org/2000/01/rdf-schema#label> "some_jpeg_image.jpg" .
+<http://purl.org/someuri3#some_pdf.pdf> <http://www.w3.org/2000/01/rdf-schema#label> "some_pdf.pdf" .
+<http://id.loc.gov/authorities/subjects/sh99001674.html> <http://www.w3.org/2000/01/rdf-schema#label> "Juvenile Literature" .
+<http://localhost:4567/collections/test_collection/test_subcollection_1/> <http://schema.org/description> "A test subcollection" .
+<http://localhost:4567/collections/test_collection/test_subcollection_1/> <http://schema.org/url> "http://localhost:4567/collections/test_collection/test_subcollection_1/" .
+<http://localhost:4567/collections/test_collection/test_subcollection_1/> <http://www.w3.org/2000/01/rdf-schema#label> "Test Subcollection 1" .
+<http://localhost:4567/collections/test_collection/test_subcollection_1/> <http://schema.org/dateModified> "11:03:44-05:00"^^<http://www.w3.org/2001/XMLSchema#time> .
+<http://localhost:4567/collections/test_collection/test_subcollection_1/> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://schema.org/WebPage> .
+<http://localhost:4567/collections/test_collection/test_subcollection_1/> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://schema.org/IndividualProduct> .
+<http://localhost:4567/collections/test_collection/test_subcollection_1/> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://schema.org/CollectionPage> .
+<http://localhost:4567/collections/test_collection/test_subcollection_1/> <http://schema.org/provider> "" .
+<http://localhost:4567/collections/test_collection/test_subcollection_1/> <http://schema.org/name> "Test Subcollection 1" .
+<http://localhost:4567/collections/test_collection/test_subcollection_1/> <http://schema.org/inLanguage> "en_US" .
+<http://localhost:4567/collections/test_collection/test_subcollection_1/> <http://schema.org/disambiguatingDescription> "c39912711d0246a9c47db78c87addccf324a603ed8b6557a41d3d137c3dc045c (SHA256)" .
+<http://localhost:4567/collections/test_collection/test_subcollection_1/> <http://schema.org/hasPart> <http://purl.org/someuri3> .
+<http://localhost:4567/collections/test_collection/test_subcollection_1/> <http://schema.org/identifier> "http://localhost:4567/collections/test_collection/test_subcollection_1/" .
+<http://localhost:4567/collections/test_collection/test_subcollection_1/> <http://schema.org/datePublished> "16:10:19-05:00"^^<http://www.w3.org/2001/XMLSchema#time> .
+<http://purl.org/someuri2#some_word_doc.docx> <http://www.w3.org/2000/01/rdf-schema#label> "some_word_doc.docx" .
+<http://purl.org/someuri3> <http://schema.org/description> "This is a test item with many different types of files." .
+<http://purl.org/someuri3> <http://schema.org/author> <https://orcid.org/0000-0002-7431-1755> .
+<http://purl.org/someuri3> <http://schema.org/url> "http://purl.org/someuri3" .
+<http://purl.org/someuri3> <http://www.w3.org/2000/01/rdf-schema#label> "Test Item 1" .
+<http://purl.org/someuri3> <http://schema.org/weight> "1200 g" .
+<http://purl.org/someuri3> <http://schema.org/dateModified> "11:03:44-05:00"^^<http://www.w3.org/2001/XMLSchema#time> .
+<http://purl.org/someuri3> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://schema.org/Article> .
+<http://purl.org/someuri3> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://schema.org/IndividualProduct> .
+<http://purl.org/someuri3> <http://schema.org/height> "30 cm" .
+<http://purl.org/someuri3> <http://schema.org/copyrightYear> "2018"^^<http://www.w3.org/2001/XMLSchema#integer> .
+<http://purl.org/someuri3> <http://schema.org/provider> "" .
+<http://purl.org/someuri3> <http://schema.org/name> "Test Item 1" .
+<http://purl.org/someuri3> <http://schema.org/inLanguage> "en_US" .
+<http://purl.org/someuri3> <http://schema.org/disambiguatingDescription> "68be780aa3e71f89ca6e9ac52c56caedd011d2c4eb51bc0feb5f431c17217c44 (SHA256)" .
+<http://purl.org/someuri3> <http://schema.org/hasPart> <http://purl.org/someuri3#some_textfile.txt> .
+<http://purl.org/someuri3> <http://schema.org/hasPart> <http://purl.org/someuri3#some_png_image.png> .
+<http://purl.org/someuri3> <http://schema.org/hasPart> <http://purl.org/someuri3#some_excel_sheets.xlsx> .
+<http://purl.org/someuri3> <http://schema.org/hasPart> <http://purl.org/someuri3#some_pdf.pdf> .
+<http://purl.org/someuri3> <http://schema.org/hasPart> <http://purl.org/someuri3#some_powerpoint.pptx> .
+<http://purl.org/someuri3> <http://schema.org/hasPart> <http://purl.org/someuri3#just_some_random_page> .
+<http://purl.org/someuri3> <http://schema.org/hasPart> <http://purl.org/someuri3#some_tiff_image.tif> .
+<http://purl.org/someuri3> <http://schema.org/hasPart> <http://purl.org/someuri3#some_jpeg_image.jpg> .
+<http://purl.org/someuri3> <http://schema.org/hasPart> <http://purl.org/someuri3#some_word_doc.docx> .
+<http://purl.org/someuri3> <http://localhost:4567/ontology/normalProperty> "something" .
+<http://purl.org/someuri3> <http://schema.org/width> "20 cm" .
+<http://purl.org/someuri3> <http://schema.org/identifier> "http://purl.org/someuri3" .
+<http://purl.org/someuri3> <http://schema.org/keywords> <http://id.loc.gov/authorities/subjects/sh99001674.html> .
+<http://purl.org/someuri3> <http://schema.org/keywords> <http://id.loc.gov/authorities/subjects/sh2009003623.html> .
+<http://purl.org/someuri3> <http://schema.org/datePublished> "2018-01-24"^^<http://www.w3.org/2001/XMLSchema#date> .
+<http://purl.org/someuri3> <http://schema.org/sku> "PZ7.F598295" .
+<http://purl.org/someuri#some_word_doc.docx> <http://www.w3.org/2000/01/rdf-schema#label> "some_word_doc.docx" .
+_:b7 <http://localhost:4567/ontology/prop3bb> "nested" .
+_:b7 <http://localhost:4567/ontology/prop3bb> "stupidly" .
+_:b7 <http://localhost:4567/ontology/prop3bb> "deeply" .
+_:b7 <http://localhost:4567/ontology/prop3ba> "very very nested" .
+<http://localhost:4567/collections/test_collection#ignore_me> <http://www.w3.org/2000/01/rdf-schema#label> "Ignore Me" .
+<http://purl.org/someuri3#just_some_random_page> <http://www.w3.org/2000/01/rdf-schema#label> "Just Some Random Page" .
+_:b4 <http://localhost:4567/ontology/prop3b> _:b5 .
+_:b4 <http://localhost:4567/ontology/prop3a> "very nested" .
+<http://purl.org/someuri2> <http://schema.org/description> "This is a test item with many different types of files." .
+<http://purl.org/someuri2> <http://schema.org/author> <https://orcid.org/0000-0002-7431-1755> .
+<http://purl.org/someuri2> <http://schema.org/url> "http://purl.org/someuri2" .
+<http://purl.org/someuri2> <http://www.w3.org/2000/01/rdf-schema#label> "Test Item 2" .
+<http://purl.org/someuri2> <http://schema.org/weight> "1200 g" .
+<http://purl.org/someuri2> <http://schema.org/dateModified> "09:23:30-05:00"^^<http://www.w3.org/2001/XMLSchema#time> .
+<http://purl.org/someuri2> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://schema.org/Article> .
+<http://purl.org/someuri2> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://schema.org/IndividualProduct> .
+<http://purl.org/someuri2> <http://schema.org/height> "30 cm" .
+<http://purl.org/someuri2> <http://schema.org/copyrightYear> "2018"^^<http://www.w3.org/2001/XMLSchema#integer> .
+<http://purl.org/someuri2> <http://schema.org/provider> "" .
+<http://purl.org/someuri2> <http://schema.org/name> "Test Item 2" .
+<http://purl.org/someuri2> <http://schema.org/inLanguage> "en_US" .
+<http://purl.org/someuri2> <http://schema.org/disambiguatingDescription> "eb0b71f17ef3ada2911a3470a3d032dbe5972980e32ae5ddf86ac4b38d210ce1 (SHA256)" .
+<http://purl.org/someuri2> <http://schema.org/hasPart> <http://purl.org/someuri2#just_some_random_page> .
+<http://purl.org/someuri2> <http://schema.org/hasPart> <http://purl.org/someuri2#some_pdf.pdf> .
+<http://purl.org/someuri2> <http://schema.org/hasPart> <http://purl.org/someuri2#some_png_image.png> .
+<http://purl.org/someuri2> <http://schema.org/hasPart> <http://purl.org/someuri2#some_excel_sheets.xlsx> .
+<http://purl.org/someuri2> <http://schema.org/hasPart> <http://purl.org/someuri2#some_word_doc.docx> .
+<http://purl.org/someuri2> <http://schema.org/hasPart> <http://purl.org/someuri2#some_tiff_image.tif> .
+<http://purl.org/someuri2> <http://schema.org/hasPart> <http://purl.org/someuri2#some_jpeg_image.jpg> .
+<http://purl.org/someuri2> <http://schema.org/hasPart> <http://purl.org/someuri2#some_powerpoint.pptx> .
+<http://purl.org/someuri2> <http://schema.org/hasPart> <http://purl.org/someuri2#some_textfile.txt> .
+<http://purl.org/someuri2> <http://localhost:4567/ontology/normalProperty> "something" .
+<http://purl.org/someuri2> <http://schema.org/width> "20 cm" .
+<http://purl.org/someuri2> <http://schema.org/identifier> "http://purl.org/someuri2" .
+<http://purl.org/someuri2> <http://schema.org/keywords> <http://id.loc.gov/authorities/subjects/sh99001674.html> .
+<http://purl.org/someuri2> <http://schema.org/keywords> <http://id.loc.gov/authorities/subjects/sh2009003623.html> .
+<http://purl.org/someuri2> <http://schema.org/datePublished> "2018-01-24"^^<http://www.w3.org/2001/XMLSchema#date> .
+<http://purl.org/someuri2> <http://schema.org/sku> "PZ7.F598295" .
+<https://orcid.org/0000-0002-7431-1755> <http://www.w3.org/2000/01/rdf-schema#label> "Welker, Joshua S." .
+<http://purl.org/someuri#some_pdf.pdf> <http://www.w3.org/2000/01/rdf-schema#label> "some_pdf.pdf" .
+<http://purl.org/someuri#some_png_image.png> <http://www.w3.org/2000/01/rdf-schema#label> "some_png_image.png" .
+<http://purl.org/someuri> <http://schema.org/description> "This is a test item with many different types of files." .
+<http://purl.org/someuri> <http://schema.org/author> "this is an author from a metadata file" .
+<http://purl.org/someuri> <http://schema.org/author> <https://orcid.org/0000-0002-7431-1755> .
+<http://purl.org/someuri> <http://schema.org/url> "http://purl.org/someuri" .
+<http://purl.org/someuri> <http://www.w3.org/2000/01/rdf-schema#label> "Test Item 1" .
+<http://purl.org/someuri> <http://schema.org/weight> "1200 g" .
+<http://purl.org/someuri> <http://schema.org/dateModified> "11:03:43-05:00"^^<http://www.w3.org/2001/XMLSchema#time> .
+<http://purl.org/someuri> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://schema.org/Article> .
+<http://purl.org/someuri> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://schema.org/IndividualProduct> .
+<http://purl.org/someuri> <http://schema.org/height> "30 cm" .
+<http://purl.org/someuri> <http://schema.org/copyrightYear> "2018"^^<http://www.w3.org/2001/XMLSchema#integer> .
+<http://purl.org/someuri> <http://schema.org/provider> "" .
+<http://purl.org/someuri> <http://schema.org/name> "Test Item 1" .
+<http://purl.org/someuri> <http://schema.org/name> "this is a name from a template file" .
+<http://purl.org/someuri> <http://schema.org/inLanguage> "en_US" .
+<http://purl.org/someuri> <http://schema.org/disambiguatingDescription> "3726c8619cef4b9cd85a1553b16d5bf4562f28f5c092ad7ce92543481801840b (SHA256)" .
+<http://purl.org/someuri> <http://schema.org/hasPart> <http://purl.org/someuri#just_some_random_page> .
+<http://purl.org/someuri> <http://schema.org/hasPart> <http://purl.org/someuri#some_audio.mp3> .
+<http://purl.org/someuri> <http://schema.org/hasPart> <http://purl.org/someuri#some_powerpoint.pptx> .
+<http://purl.org/someuri> <http://schema.org/hasPart> <http://purl.org/someuri#some_jpeg_image.jpg> .
+<http://purl.org/someuri> <http://schema.org/hasPart> <http://purl.org/someuri#some_word_doc.docx> .
+<http://purl.org/someuri> <http://schema.org/hasPart> <http://purl.org/someuri#some_pdf.pdf> .
+<http://purl.org/someuri> <http://schema.org/hasPart> <http://purl.org/someuri#some_png_image.png> .
+<http://purl.org/someuri> <http://schema.org/hasPart> <http://purl.org/someuri#some_excel_sheets.xlsx> .
+<http://purl.org/someuri> <http://schema.org/hasPart> <http://purl.org/someuri#some_textfile.txt> .
+<http://purl.org/someuri> <http://schema.org/hasPart> <http://purl.org/someuri#some_tiff_image.tif> .
+<http://purl.org/someuri> <http://schema.org/hasPart> <http://purl.org/someuri#some_video.mp4> .
+<http://purl.org/someuri> <http://schema.org/hasPart> <http://purl.org/someuri#an_important_spreadsheet> .
+<http://purl.org/someuri> <http://localhost:4567/ontology/normalProperty> "something" .
+<http://purl.org/someuri> <http://schema.org/width> "20 cm" .
+<http://purl.org/someuri> <http://schema.org/identifier> "http://purl.org/someuri" .
+<http://purl.org/someuri> <http://schema.org/keywords> <http://id.loc.gov/authorities/subjects/sh99001674.html> .
+<http://purl.org/someuri> <http://schema.org/keywords> <http://id.loc.gov/authorities/subjects/sh2009003623.html> .
+<http://purl.org/someuri> <http://schema.org/datePublished> "16:10:18-05:00"^^<http://www.w3.org/2001/XMLSchema#time> .
+<http://purl.org/someuri> <http://schema.org/datePublished> "2018-01-24"^^<http://www.w3.org/2001/XMLSchema#date> .
+<http://purl.org/someuri> <http://schema.org/sku> "this is a sku from a metadata file" .
+<http://purl.org/someuri> <http://schema.org/sku> "PZ7.F598295" .
+<http://purl.org/someuri#some_excel_sheets.xlsx> <http://www.w3.org/2000/01/rdf-schema#label> "some_excel_sheets.xlsx" .
+<http://localhost:4567/collections/test_collection/test_subcollection_2/> <http://schema.org/description> "A test subcollection" .
+<http://localhost:4567/collections/test_collection/test_subcollection_2/> <http://schema.org/url> "http://localhost:4567/collections/test_collection/test_subcollection_2/" .
+<http://localhost:4567/collections/test_collection/test_subcollection_2/> <http://www.w3.org/2000/01/rdf-schema#label> "Test Subcollection 2" .
+<http://localhost:4567/collections/test_collection/test_subcollection_2/> <http://schema.org/dateModified> "11:03:44-05:00"^^<http://www.w3.org/2001/XMLSchema#time> .
+<http://localhost:4567/collections/test_collection/test_subcollection_2/> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://schema.org/WebPage> .
+<http://localhost:4567/collections/test_collection/test_subcollection_2/> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://schema.org/IndividualProduct> .
+<http://localhost:4567/collections/test_collection/test_subcollection_2/> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://schema.org/CollectionPage> .
+<http://localhost:4567/collections/test_collection/test_subcollection_2/> <http://schema.org/provider> "" .
+<http://localhost:4567/collections/test_collection/test_subcollection_2/> <http://schema.org/name> "Test Subcollection 2" .
+<http://localhost:4567/collections/test_collection/test_subcollection_2/> <http://schema.org/inLanguage> "en_US" .
+<http://localhost:4567/collections/test_collection/test_subcollection_2/> <http://schema.org/disambiguatingDescription> "b8c1675544f324fc57932eec4e9e412da0ac69e0b6e0efbcc37beee3e7e6be78 (SHA256)" .
+<http://localhost:4567/collections/test_collection/test_subcollection_2/> <http://schema.org/hasPart> <http://purl.org/someuri4> .
+<http://localhost:4567/collections/test_collection/test_subcollection_2/> <http://schema.org/identifier> "http://localhost:4567/collections/test_collection/test_subcollection_2/" .
+<http://localhost:4567/collections/test_collection/test_subcollection_2/> <http://schema.org/datePublished> "16:10:19-05:00"^^<http://www.w3.org/2001/XMLSchema#time> .
+<http://purl.org/someuri2#some_powerpoint.pptx> <http://www.w3.org/2000/01/rdf-schema#label> "some_powerpoint.pptx" .
+<http://purl.org/someuri3#some_textfile.txt> <http://www.w3.org/2000/01/rdf-schema#label> "some_textfile.txt" .
+<http://purl.org/someuri#some_textfile.txt> <http://www.w3.org/2000/01/rdf-schema#label> "some_textfile.txt" .
+<http://purl.org/someuri#some_tiff_image.tif> <http://www.w3.org/2000/01/rdf-schema#label> "some_tiff_image.tif" .
+<http://purl.org/someuri4#some_png_image.png> <http://www.w3.org/2000/01/rdf-schema#label> "some_png_image.png" .
+<http://purl.org/someuri#some_video.mp4> <http://www.w3.org/2000/01/rdf-schema#label> "some_video.mp4" .
+<http://purl.org/someuri3#some_png_image.png> <http://www.w3.org/2000/01/rdf-schema#label> "some_png_image.png" .
+<http://purl.org/someuri#an_important_spreadsheet> <http://www.w3.org/2000/01/rdf-schema#label> "An Important Spreadsheet" .
+<http://purl.org/someuri3#some_jpeg_image.jpg> <http://www.w3.org/2000/01/rdf-schema#label> "some_jpeg_image.jpg" .
+<http://purl.org/someuri3#some_word_doc.docx> <http://www.w3.org/2000/01/rdf-schema#label> "some_word_doc.docx" .
+<http://purl.org/someuri3#some_excel_sheets.xlsx> <http://www.w3.org/2000/01/rdf-schema#label> "some_excel_sheets.xlsx" .
+<http://purl.org/someuri4#just_some_random_page> <http://www.w3.org/2000/01/rdf-schema#label> "Just Some Random Page" .
+<http://purl.org/someuri4#some_tiff_image.tif> <http://www.w3.org/2000/01/rdf-schema#label> "some_tiff_image.tif" .
+<http://purl.org/someuri4#some_excel_sheets.xlsx> <http://www.w3.org/2000/01/rdf-schema#label> "some_excel_sheets.xlsx" .
+_:b3 <http://localhost:4567/ontology/prop3bb> "nested" .
+_:b3 <http://localhost:4567/ontology/prop3bb> "stupidly" .
+_:b3 <http://localhost:4567/ontology/prop3bb> "deeply" .
+_:b3 <http://localhost:4567/ontology/prop3ba> "very very nested" .
+<http://purl.org/someuri4> <http://schema.org/description> "This is a test item with many different types of files." .
+<http://purl.org/someuri4> <http://schema.org/author> <https://orcid.org/0000-0002-7431-1755> .
+<http://purl.org/someuri4> <http://schema.org/url> "http://purl.org/someuri4" .
+<http://purl.org/someuri4> <http://www.w3.org/2000/01/rdf-schema#label> "Test Item 1" .
+<http://purl.org/someuri4> <http://schema.org/weight> "1200 g" .
+<http://purl.org/someuri4> <http://schema.org/dateModified> "11:03:44-05:00"^^<http://www.w3.org/2001/XMLSchema#time> .
+<http://purl.org/someuri4> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://schema.org/Article> .
+<http://purl.org/someuri4> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://schema.org/IndividualProduct> .
+<http://purl.org/someuri4> <http://schema.org/height> "30 cm" .
+<http://purl.org/someuri4> <http://schema.org/copyrightYear> "2018"^^<http://www.w3.org/2001/XMLSchema#integer> .
+<http://purl.org/someuri4> <http://schema.org/provider> "" .
+<http://purl.org/someuri4> <http://schema.org/name> "Test Item 1" .
+<http://purl.org/someuri4> <http://schema.org/inLanguage> "en_US" .
+<http://purl.org/someuri4> <http://schema.org/disambiguatingDescription> "35ed51850894816c73ae8f32f08cfc64d4226275842ab4e66c4ee019aff8ae16 (SHA256)" .
+<http://purl.org/someuri4> <http://schema.org/hasPart> <http://purl.org/someuri4#some_png_image.png> .
+<http://purl.org/someuri4> <http://schema.org/hasPart> <http://purl.org/someuri4#just_some_random_page> .
+<http://purl.org/someuri4> <http://schema.org/hasPart> <http://purl.org/someuri4#some_excel_sheets.xlsx> .
+<http://purl.org/someuri4> <http://schema.org/hasPart> <http://purl.org/someuri4#some_word_doc.docx> .
+<http://purl.org/someuri4> <http://schema.org/hasPart> <http://purl.org/someuri4#some_textfile.txt> .
+<http://purl.org/someuri4> <http://schema.org/hasPart> <http://purl.org/someuri4#some_powerpoint.pptx> .
+<http://purl.org/someuri4> <http://schema.org/hasPart> <http://purl.org/someuri4#some_jpeg_image.jpg> .
+<http://purl.org/someuri4> <http://schema.org/hasPart> <http://purl.org/someuri4#some_tiff_image.tif> .
+<http://purl.org/someuri4> <http://schema.org/hasPart> <http://purl.org/someuri4#some_pdf.pdf> .
+<http://purl.org/someuri4> <http://localhost:4567/ontology/normalProperty> "something" .
+<http://purl.org/someuri4> <http://schema.org/width> "20 cm" .
+<http://purl.org/someuri4> <http://schema.org/identifier> "http://purl.org/someuri4" .
+<http://purl.org/someuri4> <http://schema.org/keywords> <http://id.loc.gov/authorities/subjects/sh99001674.html> .
+<http://purl.org/someuri4> <http://schema.org/keywords> <http://id.loc.gov/authorities/subjects/sh2009003623.html> .
+<http://purl.org/someuri4> <http://schema.org/datePublished> "2018-01-24"^^<http://www.w3.org/2001/XMLSchema#date> .
+<http://purl.org/someuri4> <http://schema.org/sku> "PZ7.F598295" .
+<http://purl.org/someuri3#some_powerpoint.pptx> <http://www.w3.org/2000/01/rdf-schema#label> "some_powerpoint.pptx" .
+_:b1 <http://localhost:4567/ontology/prop3bb> "nested" .
+_:b1 <http://localhost:4567/ontology/prop3bb> "stupidly" .
+_:b1 <http://localhost:4567/ontology/prop3bb> "deeply" .
+_:b1 <http://localhost:4567/ontology/prop3ba> "very very nested" .
+<http://purl.org/someuri2#some_tiff_image.tif> <http://www.w3.org/2000/01/rdf-schema#label> "some_tiff_image.tif" .
+<http://purl.org/someuri4#some_word_doc.docx> <http://www.w3.org/2000/01/rdf-schema#label> "some_word_doc.docx" .
+_:b6 <http://localhost:4567/ontology/prop3b> _:b7 .
+_:b6 <http://localhost:4567/ontology/prop3a> "very nested" .
+<http://purl.org/someuri4#some_textfile.txt> <http://www.w3.org/2000/01/rdf-schema#label> "some_textfile.txt" .
+<http://id.loc.gov/authorities/subjects/sh2009003623.html> <http://www.w3.org/2000/01/rdf-schema#label> "Children's literature--Appreciation--United States" .
+<http://purl.org/someuri2#some_textfile.txt> <http://www.w3.org/2000/01/rdf-schema#label> "some_textfile.txt" .
+<http://purl.org/someuri2#some_jpeg_image.jpg> <http://www.w3.org/2000/01/rdf-schema#label> "some_jpeg_image.jpg" .
+<http://purl.org/someuri4#some_powerpoint.pptx> <http://www.w3.org/2000/01/rdf-schema#label> "some_powerpoint.pptx" .
+<http://purl.org/someuri3#some_tiff_image.tif> <http://www.w3.org/2000/01/rdf-schema#label> "some_tiff_image.tif" .
+<http://purl.org/someuri4#some_pdf.pdf> <http://www.w3.org/2000/01/rdf-schema#label> "some_pdf.pdf" .
+_:b0 <http://localhost:4567/ontology/prop3b> _:b1 .
+_:b0 <http://localhost:4567/ontology/prop3a> "very nested" .
+<http://purl.org/someuri4#some_jpeg_image.jpg> <http://www.w3.org/2000/01/rdf-schema#label> "some_jpeg_image.jpg" .
+_:b2 <http://localhost:4567/ontology/prop3b> _:b3 .
+_:b2 <http://localhost:4567/ontology/prop3a> "very nested" .
+_:b5 <http://localhost:4567/ontology/prop3bb> "nested" .
+_:b5 <http://localhost:4567/ontology/prop3bb> "stupidly" .
+_:b5 <http://localhost:4567/ontology/prop3bb> "deeply" .
+_:b5 <http://localhost:4567/ontology/prop3ba> "very very nested" .

@@ -1,0 +1,151 @@
+<?xml version="1.0"?>
+<collection xmlns="http://www.loc.gov/MARC21/slim">
+  <record>
+    <leader>00438npma 22001688u 4500</leader>
+    <datafield ind1="0" ind2="0" tag="245">
+      <subfield code="a">Test Item 1</subfield>
+    </datafield>
+    <datafield ind1=" " ind2=" " tag="520">
+      <subfield code="a">This is a test item with many different types of files.</subfield>
+    </datafield>
+    <datafield ind1="8" ind2=" " tag="024">
+      <subfield code="a">http://purl.org/someuri</subfield>
+    </datafield>
+    <datafield ind1=" " ind2=" " tag="046">
+      <subfield code="j">2018-03-13 11:03:43 -0500</subfield>
+    </datafield>
+    <datafield ind1=" " ind2=" " tag="260">
+      <subfield code="c">2018-01-24</subfield>
+    </datafield>
+    <datafield ind1=" " ind2=" " tag="546">
+      <subfield code="a">en_US</subfield>
+    </datafield>
+    <datafield ind1="0" ind2=" " tag="774">
+      <subfield code="n">some_audio.mp3</subfield>
+    </datafield>
+    <datafield ind1=" " ind2=" " tag="720">
+      <subfield code="a">Welker, Joshua S.</subfield>
+    </datafield>
+    <datafield ind1=" " ind2=" " tag="542">
+      <subfield code="g">2018</subfield>
+    </datafield>
+    <datafield ind1=" " ind2=" " tag="653">
+      <subfield code="a">Juvenile Literature</subfield>
+    </datafield>
+    <datafield ind1=" " ind2=" " tag="300">
+      <subfield code="a">1200 g</subfield>
+    </datafield>
+    <controlfield tag="001">http://purl.org/someuri</controlfield>
+  </record>
+  <record>
+    <leader>00448npma 22001688u 4500</leader>
+    <datafield ind1="0" ind2="0" tag="245">
+      <subfield code="a">Test Item 2</subfield>
+    </datafield>
+    <datafield ind1=" " ind2=" " tag="520">
+      <subfield code="a">This is a test item with many different types of files.</subfield>
+    </datafield>
+    <datafield ind1="8" ind2=" " tag="024">
+      <subfield code="a">http://purl.org/someuri2</subfield>
+    </datafield>
+    <datafield ind1=" " ind2=" " tag="046">
+      <subfield code="j">2018-03-16 09:23:30 -0500</subfield>
+    </datafield>
+    <datafield ind1=" " ind2=" " tag="260">
+      <subfield code="c">2018-01-24</subfield>
+    </datafield>
+    <datafield ind1=" " ind2=" " tag="546">
+      <subfield code="a">en_US</subfield>
+    </datafield>
+    <datafield ind1="0" ind2=" " tag="774">
+      <subfield code="n">some_excel_sheets.xlsx</subfield>
+    </datafield>
+    <datafield ind1=" " ind2=" " tag="720">
+      <subfield code="a">Welker, Joshua S.</subfield>
+    </datafield>
+    <datafield ind1=" " ind2=" " tag="542">
+      <subfield code="g">2018</subfield>
+    </datafield>
+    <datafield ind1=" " ind2=" " tag="653">
+      <subfield code="a">Juvenile Literature</subfield>
+    </datafield>
+    <datafield ind1=" " ind2=" " tag="300">
+      <subfield code="a">1200 g</subfield>
+    </datafield>
+    <controlfield tag="001">http://purl.org/someuri2</controlfield>
+  </record>
+  <record>
+    <leader>00448npma 22001688u 4500</leader>
+    <datafield ind1="0" ind2="0" tag="245">
+      <subfield code="a">Test Item 1</subfield>
+    </datafield>
+    <datafield ind1=" " ind2=" " tag="520">
+      <subfield code="a">This is a test item with many different types of files.</subfield>
+    </datafield>
+    <datafield ind1="8" ind2=" " tag="024">
+      <subfield code="a">http://purl.org/someuri3</subfield>
+    </datafield>
+    <datafield ind1=" " ind2=" " tag="046">
+      <subfield code="j">2018-03-13 11:03:44 -0500</subfield>
+    </datafield>
+    <datafield ind1=" " ind2=" " tag="260">
+      <subfield code="c">2018-01-24</subfield>
+    </datafield>
+    <datafield ind1=" " ind2=" " tag="546">
+      <subfield code="a">en_US</subfield>
+    </datafield>
+    <datafield ind1="0" ind2=" " tag="774">
+      <subfield code="n">some_excel_sheets.xlsx</subfield>
+    </datafield>
+    <datafield ind1=" " ind2=" " tag="720">
+      <subfield code="a">Welker, Joshua S.</subfield>
+    </datafield>
+    <datafield ind1=" " ind2=" " tag="542">
+      <subfield code="g">2018</subfield>
+    </datafield>
+    <datafield ind1=" " ind2=" " tag="653">
+      <subfield code="a">Juvenile Literature</subfield>
+    </datafield>
+    <datafield ind1=" " ind2=" " tag="300">
+      <subfield code="a">1200 g</subfield>
+    </datafield>
+    <controlfield tag="001">http://purl.org/someuri3</controlfield>
+  </record>
+  <record>
+    <leader>00448npma 22001688u 4500</leader>
+    <datafield ind1="0" ind2="0" tag="245">
+      <subfield code="a">Test Item 1</subfield>
+    </datafield>
+    <datafield ind1=" " ind2=" " tag="520">
+      <subfield code="a">This is a test item with many different types of files.</subfield>
+    </datafield>
+    <datafield ind1="8" ind2=" " tag="024">
+      <subfield code="a">http://purl.org/someuri4</subfield>
+    </datafield>
+    <datafield ind1=" " ind2=" " tag="046">
+      <subfield code="j">2018-03-13 11:03:44 -0500</subfield>
+    </datafield>
+    <datafield ind1=" " ind2=" " tag="260">
+      <subfield code="c">2018-01-24</subfield>
+    </datafield>
+    <datafield ind1=" " ind2=" " tag="546">
+      <subfield code="a">en_US</subfield>
+    </datafield>
+    <datafield ind1="0" ind2=" " tag="774">
+      <subfield code="n">some_excel_sheets.xlsx</subfield>
+    </datafield>
+    <datafield ind1=" " ind2=" " tag="720">
+      <subfield code="a">Welker, Joshua S.</subfield>
+    </datafield>
+    <datafield ind1=" " ind2=" " tag="542">
+      <subfield code="g">2018</subfield>
+    </datafield>
+    <datafield ind1=" " ind2=" " tag="653">
+      <subfield code="a">Juvenile Literature</subfield>
+    </datafield>
+    <datafield ind1=" " ind2=" " tag="300">
+      <subfield code="a">1200 g</subfield>
+    </datafield>
+    <controlfield tag="001">http://purl.org/someuri4</controlfield>
+  </record>
+</collection>

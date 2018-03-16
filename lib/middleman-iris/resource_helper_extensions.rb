@@ -23,7 +23,7 @@ module Middleman
 
 
         def site_root?
-          return self.path.start_with?('index.') && self.dirname.match(/\/#{@app.config[:source]}$/)
+          return self.page_id == self.class.site_root(@app)&.page_id
         end
 
 
@@ -38,7 +38,7 @@ module Middleman
 
 
         def files_in_same_directory
-          @app.sitemap.resources.select{|r| r.same_directory?(self) && r.page_id != self.page_id}
+          @app.sitemap.resources.select{|r| r.same_directory?(self) && r.page_id != self.page_id && !r.ignored?}
         end
 
 
@@ -139,30 +139,37 @@ module Middleman
         end
 
 
-        def best_title
-          if self.item? || self.collection? || self.site_root?
-            return self.rdf_properties['schema:name'] || self.data.title || self.dirname_last
-          elsif self.page?
-            return self.rdf_properties['schema:name'] || self.data.title || self.parent&.data&.dig('iris', 'files', self.filename, 'rdf_properties', 'schema:name') || self.filename
-          else
-            return self.parent&.data&.dig('iris', 'children', self.filename, 'rdf_properties', 'schema:name') || self.filename
+        def best_field(field_name)
+          field_content = nil
+          @app.extensions[:iris].metadata_rankings[field_name]&.each do |ranking_name|
+            if self.rdf_properties[ranking_name]
+              field_content = self.rdf_properties[ranking_name]
+              break
+            end
           end
+          field_content ||= self.data[field_name] || self.iris_value(field_name)
+          if field_content.instance_of?(Array) || field_content.instance_of?(Hashie::Array)
+            field_content = field_content.first
+          end
+          if (field_content.instance_of?(Hash) || field_content.instance_of?(Middleman::Util::EnhancedHash)) && field_content.has_key?('_label')
+            field_content = field_content['_label']
+          end
+          return field_content
+        end
+
+
+        def best_title
+          return self.best_field('title') || self.filename
         end
 
 
         def best_description
-          if self.directory_index?
-            return self.rdf_properties['schema:description'] || self.data.dig('iris', 'description') || nil
-          elsif self.page?
-            return self.rdf_properties['schema:description'] || self.data.dig('iris', 'description') || self.parent&.data&.dig('iris', 'files', self.filename, 'rdf_properties', 'schema:description') || nil
-          else
-            return self.parent&.data&.dig('iris', 'children', self.filename, 'rdf_properties', 'schema:description') || nil
-          end
+          return self.best_field('description')
         end
 
 
         def best_creator
-          return nil
+          return self.best_field('creator')
         end
 
 
@@ -182,7 +189,7 @@ module Middleman
 
 
         def static_file?
-          !page? && !collection && !self.in_metadata_dir? && self.in_collections_dir?
+          !self.collection? && !self.item? && !self.page? && !self.in_metadata_dir? && self.in_collections_dir?
         end
 
 
@@ -217,12 +224,12 @@ module Middleman
 
 
         def video?
-          # TODO
+          return %w(.mp4 .m4v .mov .avi .flv .mpg .wmv).include?(self.ext) && !self.in_metadata_dir? && self.in_collections_dir?
         end
 
 
         def audio?
-          # TODO
+          return %w(.mp3 .aac .ogg .m4a .wma .flac .wav).include?(self.ext) && !self.in_metadata_dir? && self.in_collections_dir?
         end
 
 
@@ -235,42 +242,46 @@ module Middleman
 
 
         def featured?
-          return self.iris_value(:featured)
+          return self.iris_value(:featured) == true
         end
 
 
         def position
-          if static_file?
-            return self.parent.data.dig('iris', 'files', self.filename, 'position')
-          else
-            return self.data.dig('iris', 'position')
-          end
+          return self.iris_value(:position)
         end
 
 
         def permalink
-          if @app.server?
-          "http://localhost:#{@app.config.port}#{self.url}"
+          if self.data.dig('iris', 'rdf_properties', 'schema:url') || self.metadata_from_parent.dig('iris', 'rdf_properties', 'schema:url')
+            link = self.data.dig('iris', 'rdf_properties', 'schema:url') || self.metadata_from_parent.dig('iris', 'rdf_properties', 'schema:url')
+          elsif self.data.dig('iris', 'permalink') || self.metadata_from_parent.dig('iris', 'permalink')
+            link = self.data.dig('iris', 'permalink') || self.metadata_from_parent.dig('iris', 'permalink')
+          elsif @app.server?
+            link = "http://localhost:#{@app.config.port}#{self.url}"
           else
-            self.data.dig('iris', 'permalink') || @app.extensions[:iris].options[:root_url] + self.url
+            link = @app.extensions[:iris].options[:root_url] + self.url
+          end
+
+          if link.instance_of?(Array) || link.instance_of?(Hashie::Array)
+            return link.first
+          else
+            return link
           end
         end
 
 
         def uri
-          if self.item? || self.collection? || self.site_root?
-            return self.permalink
-          elsif self.page? && !self.in_collections_dir?
+          if self.item? || self.collection? || self.site_root? || (self.page? && !self.in_collections_dir?)
             return self.permalink
           else
-            return (self.parent&.permalink || '').gsub(/\/$/,'') + '#' + self.uri_slug
+            return (self.parent&.permalink || '').gsub(/\/$/,'') + '#' + self.uri_slug.to_s
           end
         end
 
 
         def uri_slug
           unless self.item? || self.collection?
-            return self.best_title.underscore.squeeze(' ').gsub(' ','_')
+            return self.best_title&.underscore&.squeeze(' ')&.gsub(' ','_')
           end
         end
 
@@ -313,36 +324,46 @@ module Middleman
       module SingletonMethods
 
         def iris_resources(app)
-          app.sitemap.resources.select{|r| r.iris_resource?}
+          app.sitemap.resources.select{|r| r.iris_resource? && !r.ignored?}
+        end
+
+
+        def site_root(app)
+          app.sitemap.find_resource_by_path('index.html')
         end
 
 
         def sort_resources(resources)
           return resources.sort do |a, b|
-            a.position <=> b.position || a.best_title <=> b.best_title || 0
+            if a.position.present? || b.position.present? && ((a.position || 1000000) <=> (b.position || 1000000)) != 0
+              (a.position || 1000000) <=> (b.position || 1000000)
+            else
+              (a.best_title <=> b.best_title) || 0
+           end
           end
         end
 
 
-        def collections(sort=true)
-          collections = sitemap.resources.select{|r| r.collection?}
+        def collections(app, sort=true)
+          collections = app.sitemap.resources.select{|r| r.collection?}
           collections = self.sort_resources(collections) if sort
           return collections
         end
 
 
         def specific_resources(app, paths = [])
-          collections = []
+          resources = []
           paths.each do |p|
-            collection = app.sitemap.resources.select{|r| r.path == p}.first
-            collections << collection if collection.present?
+            resource = app.sitemap.find_resource_by_path(p)
+            resource ||= app.sitemap.resources.select{|r| r.page_id == p}.first
+            resources << resource if resource.present?
           end
-          return collections
+          return resources
         end
 
 
-        def root_collections(sort=true)
-          collections(sort).select{|r| r.parent.blank?}
+        def root_collections(app, sort=true)
+          collections(app, sort).select{|r| r.parent.blank?}
         end
 
 

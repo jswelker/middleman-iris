@@ -53,6 +53,13 @@ module Middleman
       end
 
 
+      def clear_file_history
+        if File.exist?(self.file_history_path)
+          FileUtils.rm(self.file_history_path)
+        end
+      end
+
+
       def text_file_path
         "#{self.dirname}/.metadata/#{self.filename}.txt"
       end
@@ -132,6 +139,13 @@ module Middleman
       end
 
 
+      def clear_text_file
+        if File.exist?(self.text_file_path)
+          FileUtils.rm(self.text_file_path)
+        end
+      end
+
+
       def thumbnail_path
         "#{@app.root}/#{@app.config[:source]}/#{@app.config[:images_dir]}/thumbnails/#{self.page_id}.png"
       end
@@ -207,6 +221,13 @@ module Middleman
       end
 
 
+      def clear_thumbnail
+        if File.exist?(self.thumbnail_path)
+          FileUtils.rm(self.thumbnail_path)
+        end
+      end
+
+
       def best_index_rules
         # Hard-coded default
         rules = {
@@ -274,8 +295,12 @@ module Middleman
 
 
         # Generate file history metadata
-        def generate_history(resources)
+        def generate_history(app, directory=nil)
           puts 'Generating file history and checksums...'
+          resources = iris_resources(app)
+          if directory
+            resources.select!{|r| r.source_file.start_with?(directory)}
+          end
           resources.each do |r|
             next if r.ignored? || !r.in_collections_dir? || r.instance_of?(Middleman::Sitemap::Extensions::RedirectResource) || r.in_metadata_dir?
             r.add_file_history
@@ -283,8 +308,24 @@ module Middleman
         end
 
 
-        def generate_text(resources, force_regenerate=false)
+        def clear_history(app, directory=nil)
+          puts 'Clearing file history and checksums...'
+          resources = iris_resources(app)
+          if directory
+            resources.select!{|r| r.source_file.start_with?(directory)}
+          end
+          resources.each do |r|
+            r.clear_file_history
+          end
+        end
+
+
+        def generate_text(app, directory=nil)
           puts 'Generating file text for indexing...'
+          resources = iris_resources(app)
+          if directory
+            resources.select!{|r| r.source_file.start_with?(directory)}
+          end
           resources.each do |r|
             next if r.ignored? || !r.in_collections_dir? || r.instance_of?(Middleman::Sitemap::Extensions::RedirectResource) || r.in_metadata_dir?
             r.rip_text_to_file
@@ -292,11 +333,39 @@ module Middleman
         end
 
 
-        def generate_thumbnails(resources, force_regenerate=false)
+        def clear_text(app, directory=nil)
+          puts 'Clearing file text for indexing...'
+          resources = iris_resources(app)
+          if directory
+            resources.select!{|r| r.source_file.start_with?(directory)}
+          end
+          resources.each do |r|
+            r.clear_text_file
+          end
+        end
+
+
+        def generate_thumbnails(app, directory=nil, force_regenerate=false)
           puts 'Generating thumbnails...'
+          resources = iris_resources(app)
+          if directory
+            resources.select!{|r| r.source_file.start_with?(directory)}
+          end
           resources.each do |r|
             next if r.ignored? || !r.in_collections_dir? || r.instance_of?(Middleman::Sitemap::Extensions::RedirectResource) || r.in_metadata_dir?
             r.generate_thumbnail(force_regenerate)
+          end
+        end
+
+
+        def clear_thumbnails(app, directory=nil, force_regenerate=false)
+          puts 'Clearing thumbnails...'
+          resources = iris_resources(app)
+          if directory
+            resources.select!{|r| r.source_file.start_with?(directory)}
+          end
+          resources.each do |r|
+            r.clear_thumbnail
           end
         end
 

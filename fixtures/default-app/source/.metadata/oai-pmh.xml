@@ -53,7 +53,7 @@
     <oai:record>
       <oai:header>
         <oai:identifier>http://purl.org/someuri2</oai:identifier>
-        <oai:datestamp>2018-03-16T09:36:56-05:00</oai:datestamp>
+        <oai:datestamp>2018-03-19T15:02:24-05:00</oai:datestamp>
       </oai:header>
       <oai:metadata>
         <oai:dc xmlns:oai_dc="http://www.openarchives.org/OAI/2.0/oai_dc/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:schemaLocation="http://www.openarchives.org/OAI/2.0/oai_dc/ http://www.openarchives.org/OAI/2.0/oai_dc.xsd">
@@ -63,7 +63,7 @@
           <dc:description>some caption</dc:description>
           <dc:identifier>http://purl.org/someuri2</dc:identifier>
           <dc:identifier>PZ7.F598295</dc:identifier>
-          <dc:date>2018-03-16 09:23:30 -0500</dc:date>
+          <dc:date>2018-03-19 14:58:21 -0500</dc:date>
           <dc:date>2018-01-24</dc:date>
           <dc:date>2018</dc:date>
           <dc:language>en_US</dc:language>

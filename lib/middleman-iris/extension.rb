@@ -16,14 +16,9 @@ require 'middleman-iris/resource_helper_extensions'
 require 'middleman-iris/resource_processing_extensions'
 require 'middleman-iris/resource_rdf_extensions'
 require 'middleman-iris/resource_validator_extensions'
-require 'middleman-iris/cli/generate_history'
-require 'middleman-iris/cli/generate_thumbnails'
-require 'middleman-iris/cli/generate_text'
-require 'middleman-iris/cli/generate_index'
-require 'middleman-iris/cli/generate_rss'
-require 'middleman-iris/cli/generate_oai'
-require 'middleman-iris/cli/generate_rdf'
-require 'middleman-iris/cli/generate_marc'
+require 'middleman-iris/cli/generators'
+require 'middleman-iris/cli/validators'
+
 
 module Middleman
   module Iris
@@ -65,6 +60,7 @@ module Middleman
       option :filenames_to_ignore, %w(.keep), 'Names of files to ignore.'
       option :directories_to_skip, %w(.raw .originals .permissions .administrative .copyright), 'Directories within an item that will not be included in the built website for end users.'
       option :libreoffice_dir, nil, 'Where to find the LibreOffice executable for converting office files to PDF'
+      option :reports_directory, 'reports', 'Directory in which to put CSV report files (relative to Middleman root directory)'
       option :html_text_indexing_selector, nil, 'CSS selector for indexing text of HTML pages on this site'
       option :default_rdf_values, {}, 'Default RDF values to apply to all documents'
       option :oai_static_repository_gateway_url, '', 'URL of OAI-PMH Static Repository Gateway that provides access to this site\'s OAI-PMH Static Repository file'

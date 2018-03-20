@@ -3,18 +3,18 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix schema: <http://schema.org/> .
 
-<http://localhost:4567/collections/test_collection/> a schema:WebPage,
+<http://localhost:4567/collections/test_collection/> a schema:CollectionPage,
      schema:IndividualProduct,
-     schema:CollectionPage;
+     schema:WebPage;
    schema:dateModified "11:03:43-05:00"^^<http://www.w3.org/2001/XMLSchema#time>;
    schema:datePublished "16:10:18-05:00"^^<http://www.w3.org/2001/XMLSchema#time>;
    schema:description "A test collection";
    schema:disambiguatingDescription "081ebe9f356d4b53d270b4ee242b363d6ebe70de0188e172791915366911c337 (SHA256)";
-   schema:hasPart <http://localhost:4567/collections/test_collection/test_subcollection_1/>,
-     <http://localhost:4567/collections/test_collection#ignore_me>,
+   schema:hasPart <http://purl.org/someuri>,
+     <http://localhost:4567/collections/test_collection/test_subcollection_2/>,
      <http://purl.org/someuri2>,
-     <http://purl.org/someuri>,
-     <http://localhost:4567/collections/test_collection/test_subcollection_2/>;
+     <http://localhost:4567/collections/test_collection/test_subcollection_1/>,
+     <http://localhost:4567/collections/test_collection#ignore_me>;
    schema:identifier "http://localhost:4567/collections/test_collection/";
    schema:inLanguage "en_US";
    schema:name "Test Collection";
@@ -23,9 +23,9 @@
 
 <http://localhost:4567/collections/test_collection#ignore_me> rdfs:label "Ignore Me" .
 
-<http://localhost:4567/collections/test_collection/test_subcollection_1/> a schema:WebPage,
+<http://localhost:4567/collections/test_collection/test_subcollection_1/> a schema:CollectionPage,
      schema:IndividualProduct,
-     schema:CollectionPage;
+     schema:WebPage;
    rdfs:label "Test Subcollection 1";
    schema:dateModified "11:03:44-05:00"^^<http://www.w3.org/2001/XMLSchema#time>;
    schema:datePublished "16:10:19-05:00"^^<http://www.w3.org/2001/XMLSchema#time>;
@@ -38,9 +38,9 @@
    schema:provider "";
    schema:url "http://localhost:4567/collections/test_collection/test_subcollection_1/" .
 
-<http://localhost:4567/collections/test_collection/test_subcollection_2/> a schema:WebPage,
+<http://localhost:4567/collections/test_collection/test_subcollection_2/> a schema:CollectionPage,
      schema:IndividualProduct,
-     schema:CollectionPage;
+     schema:WebPage;
    rdfs:label "Test Subcollection 2";
    schema:dateModified "11:03:44-05:00"^^<http://www.w3.org/2001/XMLSchema#time>;
    schema:datePublished "16:10:19-05:00"^^<http://www.w3.org/2001/XMLSchema#time>;
@@ -61,22 +61,22 @@
      <https://orcid.org/0000-0002-7431-1755>;
    schema:copyrightYear 2018;
    schema:dateModified "11:03:43-05:00"^^<http://www.w3.org/2001/XMLSchema#time>;
-   schema:datePublished "16:10:18-05:00"^^<http://www.w3.org/2001/XMLSchema#time>,
-     "2018-01-24"^^<http://www.w3.org/2001/XMLSchema#date>;
+   schema:datePublished "2018-01-24"^^<http://www.w3.org/2001/XMLSchema#date>,
+     "16:10:18-05:00"^^<http://www.w3.org/2001/XMLSchema#time>;
    schema:description "This is a test item with many different types of files.";
    schema:disambiguatingDescription "3726c8619cef4b9cd85a1553b16d5bf4562f28f5c092ad7ce92543481801840b (SHA256)";
-   schema:hasPart <http://purl.org/someuri#just_some_random_page>,
-     <http://purl.org/someuri#some_audio.mp3>,
-     <http://purl.org/someuri#some_powerpoint.pptx>,
-     <http://purl.org/someuri#some_jpeg_image.jpg>,
-     <http://purl.org/someuri#some_word_doc.docx>,
-     <http://purl.org/someuri#some_pdf.pdf>,
-     <http://purl.org/someuri#some_png_image.png>,
-     <http://purl.org/someuri#some_excel_sheets.xlsx>,
-     <http://purl.org/someuri#some_textfile.txt>,
-     <http://purl.org/someuri#some_tiff_image.tif>,
+   schema:hasPart <http://purl.org/someuri#some_audio.mp3>,
      <http://purl.org/someuri#some_video.mp4>,
-     <http://purl.org/someuri#an_important_spreadsheet>;
+     <http://purl.org/someuri#some_excel_sheets.xlsx>,
+     <http://purl.org/someuri#an_important_spreadsheet>,
+     <http://purl.org/someuri#some_png_image.png>,
+     <http://purl.org/someuri#some_textfile.txt>,
+     <http://purl.org/someuri#some_powerpoint.pptx>,
+     <http://purl.org/someuri#some_word_doc.docx>,
+     <http://purl.org/someuri#some_jpeg_image.jpg>,
+     <http://purl.org/someuri#some_pdf.pdf>,
+     <http://purl.org/someuri#some_tiff_image.tif>,
+     <http://purl.org/someuri#just_some_random_page>;
    schema:height "30 cm";
    schema:identifier "http://purl.org/someuri";
    schema:inLanguage "en_US";
@@ -121,19 +121,19 @@
    local:normalProperty "something";
    schema:author <https://orcid.org/0000-0002-7431-1755>;
    schema:copyrightYear 2018;
-   schema:dateModified "09:23:30-05:00"^^<http://www.w3.org/2001/XMLSchema#time>;
+   schema:dateModified "14:58:21-05:00"^^<http://www.w3.org/2001/XMLSchema#time>;
    schema:datePublished "2018-01-24"^^<http://www.w3.org/2001/XMLSchema#date>;
    schema:description "This is a test item with many different types of files.";
    schema:disambiguatingDescription "eb0b71f17ef3ada2911a3470a3d032dbe5972980e32ae5ddf86ac4b38d210ce1 (SHA256)";
    schema:hasPart <http://purl.org/someuri2#just_some_random_page>,
-     <http://purl.org/someuri2#some_pdf.pdf>,
-     <http://purl.org/someuri2#some_png_image.png>,
-     <http://purl.org/someuri2#some_excel_sheets.xlsx>,
      <http://purl.org/someuri2#some_word_doc.docx>,
-     <http://purl.org/someuri2#some_tiff_image.tif>,
-     <http://purl.org/someuri2#some_jpeg_image.jpg>,
+     <http://purl.org/someuri2#some_excel_sheets.xlsx>,
+     <http://purl.org/someuri2#some_png_image.png>,
+     <http://purl.org/someuri2#some_textfile.txt>,
+     <http://purl.org/someuri2#some_pdf.pdf>,
      <http://purl.org/someuri2#some_powerpoint.pptx>,
-     <http://purl.org/someuri2#some_textfile.txt>;
+     <http://purl.org/someuri2#some_jpeg_image.jpg>,
+     <http://purl.org/someuri2#some_tiff_image.tif>;
    schema:height "30 cm";
    schema:identifier "http://purl.org/someuri2";
    schema:inLanguage "en_US";
@@ -174,14 +174,14 @@
    schema:datePublished "2018-01-24"^^<http://www.w3.org/2001/XMLSchema#date>;
    schema:description "This is a test item with many different types of files.";
    schema:disambiguatingDescription "68be780aa3e71f89ca6e9ac52c56caedd011d2c4eb51bc0feb5f431c17217c44 (SHA256)";
-   schema:hasPart <http://purl.org/someuri3#some_textfile.txt>,
-     <http://purl.org/someuri3#some_png_image.png>,
-     <http://purl.org/someuri3#some_excel_sheets.xlsx>,
-     <http://purl.org/someuri3#some_pdf.pdf>,
+   schema:hasPart <http://purl.org/someuri3#some_pdf.pdf>,
      <http://purl.org/someuri3#some_powerpoint.pptx>,
+     <http://purl.org/someuri3#some_excel_sheets.xlsx>,
+     <http://purl.org/someuri3#some_png_image.png>,
+     <http://purl.org/someuri3#some_textfile.txt>,
      <http://purl.org/someuri3#just_some_random_page>,
-     <http://purl.org/someuri3#some_tiff_image.tif>,
      <http://purl.org/someuri3#some_jpeg_image.jpg>,
+     <http://purl.org/someuri3#some_tiff_image.tif>,
      <http://purl.org/someuri3#some_word_doc.docx>;
    schema:height "30 cm";
    schema:identifier "http://purl.org/someuri3";
@@ -223,15 +223,15 @@
    schema:datePublished "2018-01-24"^^<http://www.w3.org/2001/XMLSchema#date>;
    schema:description "This is a test item with many different types of files.";
    schema:disambiguatingDescription "35ed51850894816c73ae8f32f08cfc64d4226275842ab4e66c4ee019aff8ae16 (SHA256)";
-   schema:hasPart <http://purl.org/someuri4#some_png_image.png>,
+   schema:hasPart <http://purl.org/someuri4#some_word_doc.docx>,
+     <http://purl.org/someuri4#some_png_image.png>,
+     <http://purl.org/someuri4#some_jpeg_image.jpg>,
      <http://purl.org/someuri4#just_some_random_page>,
      <http://purl.org/someuri4#some_excel_sheets.xlsx>,
-     <http://purl.org/someuri4#some_word_doc.docx>,
-     <http://purl.org/someuri4#some_textfile.txt>,
      <http://purl.org/someuri4#some_powerpoint.pptx>,
-     <http://purl.org/someuri4#some_jpeg_image.jpg>,
-     <http://purl.org/someuri4#some_tiff_image.tif>,
-     <http://purl.org/someuri4#some_pdf.pdf>;
+     <http://purl.org/someuri4#some_pdf.pdf>,
+     <http://purl.org/someuri4#some_textfile.txt>,
+     <http://purl.org/someuri4#some_tiff_image.tif>;
    schema:height "30 cm";
    schema:identifier "http://purl.org/someuri4";
    schema:inLanguage "en_US";
@@ -272,9 +272,9 @@
      local:prop3a "very nested";
      local:prop3b [
        local:prop3ba "very very nested";
-       local:prop3bb "nested",
-         "stupidly",
-         "deeply"
+       local:prop3bb "deeply",
+         "nested",
+         "stupidly"
      ]
  ] .
 
@@ -282,9 +282,9 @@
      local:prop3a "very nested";
      local:prop3b [
        local:prop3ba "very very nested";
-       local:prop3bb "nested",
-         "stupidly",
-         "deeply"
+       local:prop3bb "deeply",
+         "nested",
+         "stupidly"
      ]
  ] .
 
@@ -292,9 +292,9 @@
      local:prop3a "very nested";
      local:prop3b [
        local:prop3ba "very very nested";
-       local:prop3bb "nested",
-         "stupidly",
-         "deeply"
+       local:prop3bb "deeply",
+         "nested",
+         "stupidly"
      ]
  ] .
 
@@ -302,8 +302,8 @@
      local:prop3a "very nested";
      local:prop3b [
        local:prop3ba "very very nested";
-       local:prop3bb "nested",
-         "stupidly",
-         "deeply"
+       local:prop3bb "deeply",
+         "nested",
+         "stupidly"
      ]
  ] .

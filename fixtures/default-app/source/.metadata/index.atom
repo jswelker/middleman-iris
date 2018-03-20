@@ -6,7 +6,7 @@
   </author>
   <id></id>
   <title> - RSS Feed</title>
-  <updated>2018-03-16T09:37:16-05:00</updated>
+  <updated>2018-03-19T15:02:45-05:00</updated>
   <entry>
     <id>http://purl.org/someuri</id>
     <link href="http://purl.org/someuri"/>
@@ -18,8 +18,8 @@
     <id>http://purl.org/someuri2</id>
     <link href="http://purl.org/someuri2"/>
     <title>Test Item 2</title>
-    <updated>2018-03-16T09:36:56-05:00</updated>
-    <dc:date>2018-03-16T09:36:56-05:00</dc:date>
+    <updated>2018-03-19T15:02:24-05:00</updated>
+    <dc:date>2018-03-19T15:02:24-05:00</dc:date>
   </entry>
   <entry>
     <id>http://purl.org/someuri3</id>
@@ -35,5 +35,5 @@
     <updated>2018-03-13T11:03:44-05:00</updated>
     <dc:date>2018-03-13T11:03:44-05:00</dc:date>
   </entry>
-  <dc:date>2018-03-16T09:37:16-05:00</dc:date>
+  <dc:date>2018-03-19T15:02:45-05:00</dc:date>
 </feed>

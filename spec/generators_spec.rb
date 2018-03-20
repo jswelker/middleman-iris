@@ -23,14 +23,14 @@ describe 'Middleman::Iris' do
 
 
     it 'generates and reads file history' do
-      Middleman::Sitemap::Resource.generate_history(app.sitemap.resources)
+      Middleman::Sitemap::Resource.generate_history(app)
       expect(resource.file_history.values.last['checksum']).to eq resource.current_checksum
       expect(resource.file_history.values.last['timestamp'].to_i).to be > Time.now.to_i - 60
     end
 
 
     it 'generates and reads file text' do
-      Middleman::Sitemap::Resource.generate_text(app.sitemap.resources)
+      Middleman::Sitemap::Resource.generate_text(app)
       expect(child_file.text).to include('U.S. Individual Income Tax Return')
       expect(app.sitemap.find_resource_by_path('collections/test_collection/item2/some_excel_sheets.xlsx').text).to include('This is A1')
       expect(app.sitemap.find_resource_by_path('collections/test_collection/item2/some_word_doc.docx').text).to include('This is another paragraph.')
@@ -41,7 +41,7 @@ describe 'Middleman::Iris' do
 
     it 'generates and retrieves thumbnails' do
       FileUtils.rm_rf("#{root.dirname}/images")
-      Middleman::Sitemap::Resource.generate_thumbnails([resource, resource.children_in_same_directory].flatten)
+      Middleman::Sitemap::Resource.generate_thumbnails(app, resource.dirname)
       expect(child_file.thumbnail?).to be true
       expect(resource.thumbnail?).to be false
       expect(child_file.child_thumbnail?).to be false

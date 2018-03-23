@@ -267,8 +267,8 @@ module Middleman
       module SingletonMethods
 
 
-        def ignore_resources(resources)
-          resources.each do |r|
+        def ignore_resources(app)
+          app.sitemap.resources.each do |r|
             next if r.instance_of?(Middleman::Sitemap::Extensions::RedirectResource)
 
             # Ignore if YAML front matter indicates so
@@ -284,12 +284,9 @@ module Middleman
         end
 
 
-        def load_metadata_from_files(resources)
+        def load_metadata_from_files(app)
           puts 'Loading metadata from defaults, templates, and parents...'
-          resources.each do |r|
-            next unless r.iris_resource?
-            r.load_metadata
-          end
+          iris_resources(app).each{|r| r.load_metadata}
           puts 'Done loading metadata'
         end
 

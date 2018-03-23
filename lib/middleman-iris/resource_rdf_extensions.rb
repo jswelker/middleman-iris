@@ -57,7 +57,6 @@ module Middleman
           end
         end
         complete_metadata ||= Middleman::Util.recursively_enhance({})
-
         self.page_data = complete_metadata
         return complete_metadata
       end
@@ -157,7 +156,6 @@ module Middleman
           'schema:inLanguage' => @app.extensions[:iris].options[:default_language_code],
           'schema:disambiguatingDescription' => "#{self.last_checksum} (SHA256)"
         }
-
         if self.collection? || self.item?
           properties['schema:hasPart'] = self.children.map{|c| {
             '_label' => c.best_title,

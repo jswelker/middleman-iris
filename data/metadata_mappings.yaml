@@ -1775,3 +1775,391 @@ schema:xpath:
   - dc:identifier
 schema:yield:
   - dc:extent
+
+
+
+# BIBFRAME
+## Classes
+
+
+## Properties
+bf:absorbed:
+  - dc:hasPart
+bf:absorbedBy:
+  - dc:isPartOf
+bf:accompaniedBy:
+  - dc:relation
+bf:accompanies:
+  - dc:relation
+bf:acquisitionSource:
+  - dc:mediator
+bf:acquisitionTerms:
+  - dc:description
+bf:adminMetadata:
+  - dc:provenance
+bf:agent:
+  - dc:creator
+bf:appliedMaterial:
+  - dc:medium
+bf:arrangement:
+  - dc:description
+bf:ascenscionAndDeclination:
+  - dc:spatial
+bf:aspectRatio:
+  - dc:extent
+bf:assigner:
+  - dc:provenance
+bf:awards:
+  - dc:description
+bf:baseMaterial:
+  - dc:medium
+bf:bookFormat:
+  - dc:format
+bf:capture:
+  - dc:coverage
+bf:carrier:
+  - dc:medium
+bf:cartographicAttributes:
+  - dc:spatial
+bf:changeDate:
+  - dc:provenance
+bf:classification:
+  - dc:identifier
+bf:classificationPortion:
+  - dc:subject
+bf:code:
+  - dc:description
+bf:colorContent:
+  - dc:description
+bf:content:
+  - dc:type
+bf:contentAccessibility:
+  - dc:description
+bf:continuedBy:
+  - dc:relation
+bf:continuedInPartBy:
+  - dc:relation
+bf:continues:
+  - dc:relation
+bf:continuesInPart:
+  - dc:relation
+bf:contribution:
+  - dc:contributor
+bf:coordinates:
+  - dc:spatial
+bf:copyrightDate:
+  - dc:dateCopyrighted
+bf:copyrightRegistration:
+  - dc:license
+bf:count:
+  - dc:extent
+bf:coverArt:
+  - dc:hasFormat
+bf:creationDate:
+  - dc:provenance
+bf:credits:
+  - dc:description
+bf:custodialHistory:
+  - dc:provenance
+bf:dataSource:
+  - dc:source
+bf:date:
+  - dc:date
+bf:degree:
+  - dc:educationLevel
+bf:derivativeOf:
+  - dc:isBasedOn
+bf:derivedFrom:
+  - dc:provenance
+bf:descriptionAuthentication:
+  - dc:provenance
+bf:descriptionConventions:
+  - dc:provenance
+bf:descriptionLanguage:
+  - dc:provenance
+bf:descriptionModifier:
+  - dc:provenance
+bf:digitalCharacteristic:
+  - dc:format
+bf:dimensions:
+  - dc:extent
+bf:dissertation:
+  - dc:relation
+bf:duration:
+  - dc:extent
+bf:edition:
+  - dc:description
+bf:editionEnumeration:
+  - dc:description
+bf:editionStatement:
+  - dc:description
+bf:electronicLocator:
+  - dc:mediator
+bf:emulsion:
+  - dc:medium
+bf:ensemble:
+  - dc:description
+bf:ensembleType:
+  - dc:description
+bf:enumerationAndChronology:
+  - dc:bibliographicCitation
+bf:equinox:
+  - dc:spatial
+bf:eventContent:
+  - dc:relation
+bf:eventContentOf:
+  - dc:relation
+bf:exclusionGRing:
+  - dc:spatial
+bf:expressionOf:
+  - dc:source
+bf:extent:
+  - dc:extent
+bf:findingAid:
+  - dc:isReferencedBy
+bf:findingAidOf:
+  - dc:references
+bf:firstIssue:
+  - dc:issued
+bf:fontSize:
+  - dc:extent
+bf:frequency:
+  - dc:description
+bf:generation:
+  - dc:medium
+bf:generationDate:
+  - dc:provenance
+bf:generationProcess:
+  - dc:provenance
+bf:genreForm:
+  - dc:subject
+bf:geographicCoverage:
+  - dc:spatial
+bf:hasDerivative:
+  - dc:relation
+bf:hasEquivalent:
+  - dc:relation
+bf:hasExpression:
+  - dc:relation
+bf:hasInstance:
+  - dc:relation
+bf:hasItem:
+  - dc:relation
+bf:hasPart:
+  - dc:hasPart
+bf:hasReproduction:
+  - dc:relation
+bf:hasSeries:
+  - dc:isPartOf
+bf:hasSubseries:
+  - dc:isPartOf
+bf:heldBy:
+  - dc:mediator
+bf:hierarchicalLevel:
+  - dc:description
+bf:historyOfWork:
+  - dc:description
+bf:identifiedBy:
+  - dc:identifier
+bf:identifies:
+  - dc:relation
+bf:illustrativeContent:
+  - dc:description
+bf:immediateAcquisition:
+  - dc:provenance
+bf:index:
+  - dc:hasPart
+bf:indexOf:
+  - dc:isPartOf
+bf:instanceOf:
+  - dc:relation
+bf:instrument:
+  - dc:description
+bf:instrumentType:
+  - dc:description
+bf:intendedAudience:
+  - dc:audience
+bf:issuance:
+  - dc:description
+bf:issuedWith:
+  - dc:relation
+bf:itemOf:
+  - dc:relation
+bf:itemPortion:
+  - dc:identifier
+bf:language:
+  - dc:language
+bf:lastIssue:
+  - dc:issued
+bf:layout:
+  - dc:description
+bf:legalDate:
+  - dc:date
+bf:mainTitle:
+  - dc:title
+bf:media:
+  - dc:format
+bf:mergedToForm:
+  - dc:relation
+bf:mergerOf:
+  - dc:relation
+bf:mount:
+  - dc:medium
+bf:musicFormat:
+  - dc:description
+bf:musicKey:
+  - dc:description
+bf:musicMedium:
+  - dc:description
+bf:musicOpusNumber:
+  - dc:description
+bf:musicSerialNumber:
+  - dc:identifier
+bf:musicThematicNumber:
+  - dc:description
+bf:natureOfContent:
+  - dc:description
+bf:notation:
+  - dc:description
+bf:note:
+  - dc:description
+bf:noteType:
+  - dc:description
+bf:organization:
+  - dc:description
+bf:originalVersion:
+  - dc:isVersionOf
+bf:originalVersionOf:
+  - dc:hasVersion
+bf:originDate:
+  - dc:created
+bf:originPlace:
+  - dc:description
+bf:otherPhysicalFormat:
+  - dc:hasFormat
+bf:outerGRing:
+  - dc:spatial
+bf:part:
+  - dc:description
+bf:partName:
+  - dc:title
+bf:partNumber:
+  - dc:title
+bf:partOf:
+  - dc:isPartOf
+bf:pattern:
+  - dc:description
+bf:physicalLocation:
+  - dc:description
+bf:place:
+  - dc:spatial
+bf:polarity:
+  - dc:description
+bf:precededBy:
+  - dc:relation
+bf:preferredCitation:
+  - dc:bibliographicCitation
+bf:productionMethod:
+  - dc:description
+bf:projection:
+  - dc:spatial
+bf:projectionCharacteristic:
+  - dc:description
+bf:provisionActivity:
+  - dc:publisher
+bf:provisionActivityStatement:
+  - dc:publisher
+bf:qualifier:
+  - dc:identifier
+bf:reductionRatio:
+  - dc:extent
+bf:referencedBy:
+  - dc:isReferencedBy
+bf:references:
+  - dc:references
+bf:relatedTo:
+  - dc:relation
+bf:replacedBy:
+  - dc:isReplacedBy
+bf:replacementOf:
+  - dc:replaces
+bf:reproductionOf:
+  - dc:versionOf
+bf:review:
+  - dc:description
+bf:scale:
+  - dc:extent
+bf:schedulePart:
+  - dc:description
+bf:separatedFrom:
+  - dc:relation
+bf:seriesEnumeration:
+  - dc:description
+bf:seriesOf:
+  - dc:partOf
+bf:seriesStatement:
+  - dc:description
+bf:shelfMark:
+  - dc:identifier
+bf:soundCharacteristic:
+  - dc:description
+bf:soundContent:
+  - dc:description
+bf:spanEnd:
+  - dc:description
+bf:splitInto:
+  - dc:relation
+bf:status:
+  - dc:description
+bf:subject:
+  - dc:subject
+bf:sublocation:
+  - dc:description
+bf:subseriesEnumeration:
+  - dc:description
+bf:subseriesOf:
+  - dc:isPartOf
+bf:subseriesStatement:
+  - dc:description
+bf:subtitle:
+  - dc:title
+bf:succeededBy:
+  - dc:relation
+bf:summary:
+  - dc:abstract
+bf:supplement:
+  - dc:relation
+bf:supplementaryContent:
+  - dc:description
+bf:supplementTo:
+  - dc:relation
+bf:systemRequirement:
+  - dc:description
+bf:table:
+  - dc:description
+bf:tableOfContents:
+  - dc:tableOfContents
+bf:tableSeq:
+  - dc:description
+bf:temporalCoverage:
+  - dc:temporal
+bf:title:
+  - dc:title
+bf:translation:
+  - dc:hasVersion
+bf:translationOf:
+  - dc:isVersionOf
+bf:unit:
+  - dc:extent
+bf:usageAndAccessPolicy:
+  - dc:accessRights
+bf:variantType:
+  - dc:description
+bf:version:
+  - dc:description
+bf:videoCharacteristic:
+  - dc:description
+bf:voice:
+  - dc:description
+bf:voiceType:
+  - dc:description

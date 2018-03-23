@@ -114,8 +114,8 @@ module Middleman
             ext.metadata_rankings = YAML.load_file("#{File.expand_path('../../../data', __FILE__)}/metadata_rankings.yaml")
           end
 
-          ext.ignore_resources(app.sitemap.resources)
-          ext.load_metadata_from_files(app.sitemap.resources)
+          ext.ignore_resources(app)
+          ext.load_metadata_from_files(app)
 
           if (app.build? && ext.options[:generate_history_on_build] && app.config[:iris_cli].blank?) || (app.server? && ext.options[:generate_history_on_serve])
             ext.generate_history(app.sitemap.resources)

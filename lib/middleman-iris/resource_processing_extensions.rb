@@ -264,6 +264,54 @@ module Middleman
       end
 
 
+      def replace_metadata_value(original_string, new_string, front_matter_delimiter='-')
+        return unless self.source_file.include?('1969')
+        filenames = [self.source_file, "#{self.metadata_directory_path}/#{self.filename}.yaml", "#{self.metadata_directory_path}/#{self.filename}.json"]
+        filenames.each do |f|
+          next unless File.exist?(f)
+          file_text = File.read(f)
+          original_metadata_text = file_text
+
+          matches = []
+          file_text.scan(/^#{Regexp.escape(front_matter_delimiter) * 3}|\n#{Regexp.escape(front_matter_delimiter) * 3}/) do
+            matches << $~
+          end
+
+          if f == self.source_file && f == self.source_file && matches.length >= 2
+            original_metadata_text = original_metadata_text.slice(matches[0].end(0), matches[1].begin(0) - 2)
+          elsif f == self.source_file
+            next
+          end
+
+          new_metadata_text = original_metadata_text
+          new_metadata_text = new_metadata_text.gsub(/(:\s*?#{Regexp.escape(original_string)}|-\s*?#{Regexp.escape(original_string)}|\"#{Regexp.escape(original_string)}\"|\'#{Regexp.escape(original_string)}\')/) do |match_text|
+            match_data = Regexp.last_match
+
+            # First make sure this is not accidentally an instance of new_string
+            if new_string.match(original_string)
+              pre_match_length = $~.pre_match.length
+              post_match_length = $~.post_match.length
+              potential_start = match_data.begin(0) - pre_match_length
+              potential_end = match_data.end(0) + post_match_length
+              matched_section = new_metadata_text.slice(potential_start, potential_end)
+              next if matched_section == new_string || matched_section.to_json == new_string.to_json || matched_section.to_json == new_string || matched_section == new_string.to_json
+            end
+
+            # Next, replace the original text within the match with the new text
+            if match_text == "\"#{original_string}\"" || match_text == "'#{original_string}'"
+              new_string
+            else
+              match_text.gsub(original_string, new_string)
+            end
+          end
+
+          new_text = file_text.gsub(original_metadata_text, new_metadata_text)
+          File.open(f, 'w'){|file| file.write(new_text)}
+          return new_text
+        end
+      end
+
+
       module SingletonMethods
 
 
@@ -286,8 +334,9 @@ module Middleman
 
         def load_metadata_from_files(app)
           puts 'Loading metadata from defaults, templates, and parents...'
+          time = Time.now
           iris_resources(app).each{|r| r.load_metadata}
-          puts 'Done loading metadata'
+          puts "Done loading metadata (#{(Time.now - time).to_s}s)"
         end
 
 
@@ -606,6 +655,9 @@ module Middleman
         def search_index_url(app)
           return "#{site_root(app).permalink}.metadata/index.json"
         end
+
+
+
 
 
       end # END MODULE SingletonMethods

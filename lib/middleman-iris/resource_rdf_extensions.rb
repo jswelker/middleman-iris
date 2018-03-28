@@ -13,6 +13,7 @@ module Middleman
 
       def load_metadata
         # Find merge rules
+        time = Time.now
         merge_rules = {
           templates: 'overwrite',
           parent: 'overwrite',
@@ -58,12 +59,13 @@ module Middleman
         end
         complete_metadata ||= Middleman::Util.recursively_enhance({})
         self.page_data = complete_metadata
+        #puts "#{(Time.now - time).to_s} for #{self.path}"
         return complete_metadata
       end
 
 
       def metadata_from_parent
-        return {'iris' => (self.parent&.iris_value(['children', filename]) || Middleman::Util.recursively_enhance({}))}
+        return {'iris' => (self.fast_parent&.iris_value(['children', filename]) || Middleman::Util.recursively_enhance({}))}
       end
 
 
@@ -81,7 +83,7 @@ module Middleman
 
 
       def metadata_from_templates
-        templates = self.iris_value('templates') || []
+        templates = [self.iris_value('templates')].flatten.compact
         metadata = Middleman::Util.recursively_enhance({})
         templates.each do |template|
           template_data = @app.data.to_h.dig(*template.split('/'))
@@ -165,11 +167,11 @@ module Middleman
           properties['schema:contentUrl'] = self.filename
           properties['schema:contentSize'] = self.resource_file_size
           properties['schema:fileFormat'] = MIME::Types.type_for(self.filename).first.to_s
-          properties['schema:isPartOf'] = self.parent&.permalink
+          properties['schema:isPartOf'] = self.fast_parent&.permalink
           properties['schema:thumbnailUrl'] = self.thumbnail_url
         elsif self.page?
-          properties['schema:mainEntity'] = self.parent&.permalink
-          properties['schema:isPartOf'] = self.parent&.permalink
+          properties['schema:mainEntity'] = self.fast_parent&.permalink
+          properties['schema:isPartOf'] = self.fast_parent&.permalink
         end
         properties_enhanced_hash = Middleman::Util.recursively_enhance({iris: {rdf_properties: properties}})
         if self.is_vocabulary?('schema')

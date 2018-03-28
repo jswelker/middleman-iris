@@ -59,6 +59,24 @@ module Middleman
         end
 
 
+        # A faster method for finding the parent resource without traversing the whole sitemap
+        def fast_parent
+          check_path = self.dirname.gsub(/^.*?#{@app.config[:source]}\/?/, '') + "/#{@app.config[:index_file]}"
+          if !self.directory_index?
+            parent = @app.sitemap.find_resource_by_path(check_path)
+            return parent if parent.present?
+          end
+
+          parent = nil
+          while parent.blank? && check_path.length > 0 && check_path != @app.config[:index_file]
+            check_path = (check_path.gsub(/[a-zA-Z0-9\-_\.]{1,}?\/?$/,'').gsub(/[a-zA-Z0-9\-_\.]*?\/?$/,'') + '/').gsub('//', '/') + "#{@app.config[:index_file]}"
+            next if check_path == self.path || check_path == @app.config[:index_file]
+            parent = @app.sitemap.find_resource_by_path(check_path)
+          end
+          return parent
+        end
+
+
         def descendant_of?(potential_parent_resource)
           current_resource = self
           is_descendant = current_resource.parent&.page_id == potential_parent_resource.page_id
@@ -274,7 +292,7 @@ module Middleman
           if self.item? || self.collection? || self.site_root? || (self.page? && !self.in_collections_dir?)
             return self.permalink
           else
-            return (self.parent&.permalink || '').gsub(/\/$/,'') + '#' + self.uri_slug.to_s
+            return (self.fast_parent&.permalink || '').gsub(/\/$/,'') + '#' + self.uri_slug.to_s
           end
         end
 
